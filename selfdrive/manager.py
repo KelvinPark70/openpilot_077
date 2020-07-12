@@ -435,7 +435,7 @@ def manager_thread():
   params = Params()
 
 
-  EnableLogger = (params.get("IsUploadRawEnabled") != b"0")
+  EnableLogger = (params.get("RecordFront") != b"0")
 
   if not EnableLogger:
     car_started_processes.remove( 'loggerd' )

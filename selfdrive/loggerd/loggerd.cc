@@ -587,7 +587,7 @@ int main(int argc, char** argv) {
   bool is_streaming = false;
   int is_logging = 0;
 
-  ui_get_params( "IsUploadRawEnabled", &is_logging );
+  ui_get_params( "RecordFront", &is_logging );
 
 
   if (argc > 1 && strcmp(argv[1], "--stream") == 0) {
