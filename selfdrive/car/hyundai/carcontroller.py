@@ -1,7 +1,7 @@
 from cereal import car
 from common.realtime import DT_CTRL
 from selfdrive.car import apply_std_steer_torque_limits
-from selfdrive.car.hyundai.hyundaican import create_lkas11, create_clu11, create_lfa_mfa
+from selfdrive.car.hyundai.hyundaican import create_lkas11, create_clu11, create_lfa_mfa, create_mdps12
 from selfdrive.car.hyundai.values import Buttons, SteerLimitParams, CAR
 from opendbc.can.packer import CANPacker
 
@@ -37,11 +37,14 @@ def process_hud_alert(enabled, fingerprint, visual_alert, left_lane,
 
 class CarController():
   def __init__(self, dbc_name, CP, VM):
+    self.CP = CP    
     self.apply_steer_last = 0
     self.car_fingerprint = CP.carFingerprint
     self.packer = CANPacker(dbc_name)
     self.steer_rate_limited = False
     self.last_resume_frame = 0
+
+    self.lkas11_cnt = 0
 
   def update(self, enabled, CS, frame, actuators, pcm_cancel_cmd, visual_alert,
              left_lane, right_lane, left_lane_depart, right_lane_depart):
@@ -67,12 +70,19 @@ class CarController():
                         left_lane, right_lane, left_lane_depart, right_lane_depart)
 
     can_sends = []
-    can_sends.append(create_lkas11(self.packer, frame, self.car_fingerprint, apply_steer, lkas_active,
+    if frame == 0: # initialize counts from last received count signals
+      self.lkas11_cnt = CS.lkas11["CF_Lkas_MsgCount"]
+    self.lkas11_cnt = (self.lkas11_cnt + 1) % 0x10
+
+    can_sends.append(create_lkas11(self.packer, self.lkas11_cnt, self.car_fingerprint, apply_steer, lkas_active,
                                    CS.lkas11, sys_warning, sys_state, enabled,
                                    left_lane, right_lane,
                                    left_lane_warning, right_lane_warning))
 
-    if pcm_cancel_cmd:
+    if self.car_fingerprint in [CAR.GRANDEUR_H_2019]:
+      can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
+
+    if pcm_cancel_cmd and self.CP.openpilotLongitudinalControl:
       can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.CANCEL))
     elif CS.out.cruiseState.standstill:
       # SCC won't resume anyway when the lead distace is less than 3.7m

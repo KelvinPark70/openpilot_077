@@ -6,7 +6,10 @@ from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness,
 from selfdrive.car.interfaces import CarInterfaceBase
 
 class CarInterface(CarInterfaceBase):
+  def __init__(self, CP, CarController, CarState):
+    super().__init__(CP, CarController, CarState )
 
+    
   @staticmethod
   def compute_gb(accel, speed):
     return float(accel) / 3.0
@@ -17,17 +20,26 @@ class CarInterface(CarInterfaceBase):
 
     ret.carName = "hyundai"
     ret.safetyModel = car.CarParams.SafetyModel.hyundai
-    ret.radarOffCan = True
+    ret.radarOffCan = True   #False(선행차우선)  #True(차선우선)    #선행차량 인식 마크 유무.
 
     # Most Hyundai car ports are community features for now
     ret.communityFeature = candidate not in [CAR.SONATA]
+
+    ret.longcontrolEnabled = False
 
     ret.steerActuatorDelay = 0.1  # Default delay
     ret.steerRateCost = 0.5
     ret.steerLimitTimer = 0.4
     tire_stiffness_factor = 1.
 
-    if candidate == CAR.SANTA_FE:
+    if candidate == CAR.GRANDEUR_H_2019:
+      ret.lateralTuning.pid.kf = 0.000005      
+      ret.mass = 1675. + STD_CARGO_KG
+      ret.wheelbase = 2.845
+      ret.steerRatio = 12.37  #12.5
+      ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
+      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
+    elif candidate == CAR.SANTA_FE:
       ret.lateralTuning.pid.kf = 0.00005
       ret.mass = 3982. * CV.LB_TO_KG + STD_CARGO_KG
       ret.wheelbase = 2.766

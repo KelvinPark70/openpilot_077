@@ -10,6 +10,7 @@ const CanMsg HYUNDAI_TX_MSGS[] = {
   {832, 0, 8},  // LKAS11 Bus 0
   {1265, 0, 4}, // CLU11 Bus 0
   {1157, 0, 4}, // LFAHDA_MFC Bus 0
+  {593, 2, 8},  // MDPS12, Bus 2
   // {1056, 0, 8}, //   SCC11,  Bus 0
   // {1057, 0, 8}, //   SCC12,  Bus 0
   // {1290, 0, 8}, //   SCC13,  Bus 0

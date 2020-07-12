@@ -406,6 +406,7 @@ struct CarParams {
   fingerprintSource @49: FingerprintSource;
   networkLocation @50 :NetworkLocation;  # Where Panda/C2 is integrated into the car's CAN network
 
+
   struct LateralParams {
     torqueBP @0 :List(Int32);
     torqueV @1 :List(Int32);
