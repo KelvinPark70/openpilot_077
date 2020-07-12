@@ -88,6 +88,11 @@ static void update_offroad_layout_state(UIState *s) {
 #endif
 }
 
+
+static void handle_openpilot_view_touch(UIState *s ) {
+  write_db_value("IsDriverViewEnabled", "0", 1);
+}
+
 static void handle_sidebar_touch(UIState *s, int touch_x, int touch_y) {
   if (!s->scene.uilayout_sidebarcollapsed && touch_x <= sbr_w) {
     if (touch_x >= settings_btn_x && touch_x < (settings_btn_x + settings_btn_w)
@@ -124,9 +129,6 @@ static void handle_vision_touch(UIState *s, int touch_x, int touch_y) {
   }
 }
 
-static void handle_openpilot_view_touch(UIState *s ) {
-  write_db_value("IsDriverViewEnabled", "0", 1);
-}
 
 volatile sig_atomic_t do_exit = 0;
 static void set_do_exit(int sig) {
