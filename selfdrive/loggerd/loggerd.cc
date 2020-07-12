@@ -587,8 +587,8 @@ int main(int argc, char** argv) {
   bool is_streaming = false;
   int is_logging = 0;
 
-  ui_get_params( "IsDriverViewEnabled", &is_logging );
-  LOGW("IsDriverViewEnabled=%d",is_logging);  
+  ui_get_params( "IsUploadRawEnabled", &is_logging );
+
 
   if (argc > 1 && strcmp(argv[1], "--stream") == 0) {
     is_streaming = true;
