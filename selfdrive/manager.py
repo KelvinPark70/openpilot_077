@@ -192,7 +192,7 @@ managed_processes = {
   "updated": "selfdrive.updated",
   "dmonitoringmodeld": ("selfdrive/modeld", ["./dmonitoringmodeld"]),
   "modeld": ("selfdrive/modeld", ["./modeld"]),
-  "driverview": "selfdrive.monitoring.driverview",
+  #"driverview": "selfdrive.monitoring.driverview",
 }
 
 daemon_processes = {
@@ -485,7 +485,8 @@ def manager_thread():
         kill_managed_process(p)
       # this is ugly
       if "driverview" not in running and params.get("IsDriverViewEnabled") == b"1":
-        start_managed_process("driverview")
+        pass
+        #start_managed_process("driverview")
       elif "driverview" in running and params.get("IsDriverViewEnabled") == b"0":
         kill_managed_process("driverview")
 

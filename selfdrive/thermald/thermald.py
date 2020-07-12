@@ -190,6 +190,8 @@ def thermald_thread():
   pm = PowerMonitoring()
   no_panda_cnt = 0
 
+  IsOpenpilotViewEnabled = 0
+
   while 1:
     health = messaging.recv_sock(health_sock, wait=True)
     location = messaging.recv_sock(location_sock)
@@ -229,6 +231,9 @@ def thermald_thread():
           health_prev.health.hwType != log.HealthData.HwType.unknown:
           params.panda_disconnect()
       health_prev = health
+    elif ignition == False or IsOpenpilotViewEnabled:
+      IsOpenpilotViewEnabled = int( params.get("IsDriverViewEnabled") )      
+      ignition = IsOpenpilotViewEnabled      
 
     # get_network_type is an expensive call. update every 10s
     if (count % int(10. / DT_TRML)) == 0:
@@ -306,6 +311,7 @@ def thermald_thread():
     time_valid_prev = time_valid
 
     # Show update prompt
+    """
     try:
       last_update = datetime.datetime.fromisoformat(params.get("LastUpdateTime", encoding='utf8'))
     except (TypeError, ValueError):
@@ -332,6 +338,7 @@ def thermald_thread():
       current_connectivity_alert = None
       params.delete("Offroad_ConnectivityNeeded")
       params.delete("Offroad_ConnectivityNeededPrompt")
+    """
 
     do_uninstall = params.get("DoUninstall") == b"1"
     accepted_terms = params.get("HasAcceptedTerms") == terms_version
@@ -355,10 +362,10 @@ def thermald_thread():
     should_start = should_start and time_valid
 
     # don't start while taking snapshot
-    if not should_start_prev:
-      is_viewing_driver = params.get("IsDriverViewEnabled") == b"1"
-      is_taking_snapshot = params.get("IsTakingSnapshot") == b"1"
-      should_start = should_start and (not is_taking_snapshot) and (not is_viewing_driver)
+    #if not should_start_prev:
+    #  is_viewing_driver = params.get("IsDriverViewEnabled") == b"1"
+    #  is_taking_snapshot = params.get("IsTakingSnapshot") == b"1"
+    #  should_start = should_start and (not is_taking_snapshot) and (not is_viewing_driver)
 
     if fw_version_match and not fw_version_match_prev:
       params.delete("Offroad_PandaFirmwareMismatch")

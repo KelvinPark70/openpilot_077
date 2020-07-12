@@ -219,7 +219,7 @@ EVENTS = {
       "Be ready to take over at any time",
       "Always keep hands on wheel and eyes on road",
       AlertStatus.normal, AlertSize.mid,
-      Priority.LOWER, VisualAlert.none, AudibleAlert.none, 0., 0., 15.),
+      Priority.LOWER, VisualAlert.none, AudibleAlert.none, 0., 0., 5.),
   },
 
   EventName.startupWhitePanda: {
@@ -592,7 +592,7 @@ EVENTS = {
   },
 
   EventName.wrongGear: {
-    ET.SOFT_DISABLE: SoftDisableAlert("Gear not D"),
+    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage),  #ET.SOFT_DISABLE: SoftDisableAlert("Gear not D"),
     ET.NO_ENTRY: NoEntryAlert("Gear not D"),
   },
 
@@ -608,12 +608,12 @@ EVENTS = {
   },
 
   EventName.doorOpen: {
-    ET.SOFT_DISABLE: SoftDisableAlert("Door Open"),
+    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage), #ET.SOFT_DISABLE: SoftDisableAlert("Door Open"),
     ET.NO_ENTRY: NoEntryAlert("Door open"),
   },
 
   EventName.seatbeltNotLatched: {
-    ET.SOFT_DISABLE: SoftDisableAlert("Seatbelt Unlatched"),
+    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage), #ET.SOFT_DISABLE: SoftDisableAlert("Seatbelt Unlatched"),
     ET.NO_ENTRY: NoEntryAlert("Seatbelt unlatched"),
   },
 
@@ -710,7 +710,7 @@ EVENTS = {
   },
 
   EventName.reverseGear: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Reverse Gear"),
+    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage),
     ET.NO_ENTRY: NoEntryAlert("Reverse Gear"),
   },
 
@@ -719,8 +719,13 @@ EVENTS = {
   },
 
   EventName.plannerError: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Planner Solution Error"),
-    ET.NO_ENTRY: NoEntryAlert("Planner Solution Error"),
+    #ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Planner Solution Error"),
+    #ET.NO_ENTRY: NoEntryAlert("Planner Solution Error"),
+    ET.WARNING: Alert(
+    "TAKE CONTROL",
+    "Planner Solution Error",
+    AlertStatus.userPrompt, AlertSize.mid,
+    Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimePrompt, 0., 0., 5.),
   },
 
   EventName.relayMalfunction: {
