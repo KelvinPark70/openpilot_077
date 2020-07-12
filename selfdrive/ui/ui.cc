@@ -484,7 +484,11 @@ static void ui_update(UIState *s) {
 
     assert(glGetError() == GL_NO_ERROR);
 
-    handle_openpilot_view_touch( s );
+    if( s->scene.uilayout_sidebarcollapsed == false )
+    {
+      handle_openpilot_view_touch( s );
+    }
+    
     s->scene.uilayout_sidebarcollapsed = true;
     s->scene.ui_viz_rx = (box_x-sbr_w+bdr_s*2);
     s->scene.ui_viz_rw = (box_w+sbr_w-(bdr_s*2));
