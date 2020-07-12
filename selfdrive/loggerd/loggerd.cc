@@ -585,7 +585,10 @@ int main(int argc, char** argv) {
   }
 
   bool is_streaming = false;
-  bool is_logging = true;
+  bool is_logging = false;
+
+  ui_get_params( "OpkrEnableLogger", &is_logging );
+  LOGW("OpkrEnableLogger=%d",is_logging);  
 
   if (argc > 1 && strcmp(argv[1], "--stream") == 0) {
     is_streaming = true;
