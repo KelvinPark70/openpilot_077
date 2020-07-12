@@ -377,7 +377,7 @@ int ui_get_params( const char* param_name, int *pValue )
 
   const int result = read_db_value( param_name, &string, NULL);
   if (result == 0) {
-    bool is_rhd = string[0] == '1';
+   // bool is_rhd = (string[0] == '1');
     strcpy( speed_str, string  );
     free(string);
 
