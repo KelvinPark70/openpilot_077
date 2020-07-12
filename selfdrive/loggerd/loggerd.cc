@@ -585,7 +585,7 @@ int main(int argc, char** argv) {
   }
 
   bool is_streaming = false;
-  bool is_logging = false;
+  int is_logging = 0;
 
   ui_get_params( "OpkrEnableLogger", &is_logging );
   LOGW("OpkrEnableLogger=%d",is_logging);  
