@@ -117,6 +117,10 @@ static void handle_vision_touch(UIState *s, int touch_x, int touch_y) {
   }
 }
 
+static void handle_openpilot_view_touch(UIState *s, int touch_x, int touch_y) {
+  int err = write_db_value("IsDriverViewEnabled", "0", 1);
+}
+
 volatile sig_atomic_t do_exit = 0;
 static void set_do_exit(int sig) {
   do_exit = 1;
@@ -480,6 +484,7 @@ static void ui_update(UIState *s) {
 
     assert(glGetError() == GL_NO_ERROR);
 
+    handle_openpilot_view_touch( s, 0, 0);
     s->scene.uilayout_sidebarcollapsed = true;
     s->scene.ui_viz_rx = (box_x-sbr_w+bdr_s*2);
     s->scene.ui_viz_rw = (box_w+sbr_w-(bdr_s*2));
