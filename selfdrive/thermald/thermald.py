@@ -235,7 +235,7 @@ def thermald_thread():
       IsOpenpilotViewEnabled = int( params.get("IsDriverViewEnabled") )      
       ignition = IsOpenpilotViewEnabled      
 
-    print( 'IsOpenpilotViewEnabled={}'.formaT( IsOpenpilotViewEnabled ) )
+
     # get_network_type is an expensive call. update every 10s
     if (count % int(10. / DT_TRML)) == 0:
       try:
