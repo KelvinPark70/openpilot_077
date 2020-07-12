@@ -89,9 +89,7 @@ static void update_offroad_layout_state(UIState *s) {
 }
 
 
-static void handle_openpilot_view_touch(UIState *s ) {
-  write_db_value("IsDriverViewEnabled", "0", 1);
-}
+
 
 static void handle_sidebar_touch(UIState *s, int touch_x, int touch_y) {
   if (!s->scene.uilayout_sidebarcollapsed && touch_x <= sbr_w) {
@@ -101,11 +99,6 @@ static void handle_sidebar_touch(UIState *s, int touch_x, int touch_y) {
     }
     else if (touch_x >= home_btn_x && touch_x < (home_btn_x + home_btn_w)
       && touch_y >= home_btn_y && touch_y < (home_btn_y + home_btn_h)) {
-
-      if( s->scene.uilayout_sidebarcollapsed == true )
-      {
-        handle_openpilot_view_touch( s );
-      }  
 
       if (s->started) {
         s->active_app = cereal::UiLayoutState::App::NONE;
@@ -117,14 +110,20 @@ static void handle_sidebar_touch(UIState *s, int touch_x, int touch_y) {
   }
 }
 
-static void handle_vision_touch(UIState *s, int touch_x, int touch_y) {
+static void handle_openpilot_view_touch(UIState *s ) 
+{
+  write_db_value("IsDriverViewEnabled", "0", 1);
+}
+
+static void handle_vision_touch(UIState *s, int touch_x, int touch_y) 
+{
   if (s->started && (touch_x >= s->scene.ui_viz_rx - bdr_s)
     && (s->active_app != cereal::UiLayoutState::App::SETTINGS)) {
     if (!s->scene.frontview) {
       s->scene.uilayout_sidebarcollapsed = !s->scene.uilayout_sidebarcollapsed;
     
     } else {
-      write_db_value("IsDriverViewEnabled", "0", 1);
+      handle_openpilot_view_touch( s );
     }
   }
 }
