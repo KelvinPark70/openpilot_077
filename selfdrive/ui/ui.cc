@@ -96,6 +96,12 @@ static void handle_sidebar_touch(UIState *s, int touch_x, int touch_y) {
     }
     else if (touch_x >= home_btn_x && touch_x < (home_btn_x + home_btn_w)
       && touch_y >= home_btn_y && touch_y < (home_btn_y + home_btn_h)) {
+
+      if( s->scene.uilayout_sidebarcollapsed == true )
+      {
+        handle_openpilot_view_touch( s );
+      }  
+
       if (s->started) {
         s->active_app = cereal::UiLayoutState::App::NONE;
         s->scene.uilayout_sidebarcollapsed = true;
@@ -111,6 +117,7 @@ static void handle_vision_touch(UIState *s, int touch_x, int touch_y) {
     && (s->active_app != cereal::UiLayoutState::App::SETTINGS)) {
     if (!s->scene.frontview) {
       s->scene.uilayout_sidebarcollapsed = !s->scene.uilayout_sidebarcollapsed;
+    
     } else {
       write_db_value("IsDriverViewEnabled", "0", 1);
     }
@@ -484,10 +491,7 @@ static void ui_update(UIState *s) {
 
     assert(glGetError() == GL_NO_ERROR);
 
-    if( s->scene.uilayout_sidebarcollapsed == false )
-    {
-      handle_openpilot_view_touch( s );
-    }
+
     
     s->scene.uilayout_sidebarcollapsed = true;
     s->scene.ui_viz_rx = (box_x-sbr_w+bdr_s*2);
