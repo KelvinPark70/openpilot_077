@@ -10,7 +10,7 @@ int default_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
   int addr = GET_ADDR(to_push);
 
   // check if LKAS connected to Bus0
-  if ((addr == 832) && (bus == 0)) {
+  if ((addr == 832) && (bus == 0)) {   // 832=LKAS11
     if (HKG_forward_BUS2 != false) {
       HKG_forward_BUS2 = false;
 	}
@@ -20,13 +20,13 @@ int default_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
     HKG_LCAN_on_BUS1 = true;
   }
   // check if we have a MDPS or SCC on Bus1
-  if (bus == 1 && (addr == 593 || addr == 897 || addr == 1057) && !HKG_LCAN_on_BUS1) {
+  if (bus == 1 && (addr == 593 || addr == 897 || addr == 1057) && !HKG_LCAN_on_BUS1) {  // MDPS12(593) MDPS11(897) SCC12(1057)
     if (HKG_forward_BUS1 != true) {
       HKG_forward_BUS1 = true;
 	}
   }
 
-  if ((addr == 593) && (HKG_MDPS12_checksum == -1)){
+  if ((addr == 593) && (HKG_MDPS12_checksum == -1)){  // MDPS12(593)
     int New_Chksum2 = 0;
     uint8_t dat[8];
     for (int i=0; i<8; i++) {
@@ -85,7 +85,7 @@ static int default_fwd_hook(int bus_num, CAN_FIFOMailBox_TypeDef *to_fwd) {
     bus_fwd = HKG_bus1 * 10;
   }
     // Code for LKA/LFA/HDA anti-nagging.
-  if (addr == 593 && bus_fwd != -1) {
+  if (addr == 593 && bus_fwd != -1) {   // MDPS12(593)
     uint8_t dat[8];
     int New_Chksum2 = 0;
     for (int i=0; i<8; i++) {

@@ -32,7 +32,7 @@ class CarInterface(CarInterfaceBase):
     ret.steerLimitTimer = 0.4
     tire_stiffness_factor = 1.
 
-    if candidate == CAR.GRANDEUR_H_2019:
+    if candidate == CAR.GRANDEUR_H_19:
       ret.lateralTuning.pid.kf = 0.000005      
       ret.mass = 1675. + STD_CARGO_KG
       ret.wheelbase = 2.845

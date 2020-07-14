@@ -65,8 +65,8 @@ class CarState(CarStateBase):
     # cruise state
     #ret.cruiseState.available = True
     #ret.cruiseState.enabled = cp.vl["SCC12"]['ACCMode'] != 0
-    self.main_on = (cp.vl["SCC11"]["MainMode_ACC"] != 0)
-    self.acc_active = (cp.vl["SCC12"]['ACCMode'] != 0)
+    self.main_on = (cp.vl["SCC11"]["MainMode_ACC"] != 0)  # 1056
+    self.acc_active = (cp.vl["SCC12"]['ACCMode'] != 0)    # 1057
     self.update_atom( cp, cp_cam )
 
     ret.cruiseState.available = self.main_on
@@ -303,16 +303,16 @@ class CarState(CarStateBase):
     checks = [
       # address, frequency
       ("MDPS12", 50),
-      ("TCS13", 50),
+      ("TCS13", 50),   # 916
       ("TCS15", 10),
       ("CLU11", 50),
       ("ESP12", 100),
       ("CGW1", 10),
       ("CGW4", 5),
-      ("WHL_SPD11", 50),
+      ("WHL_SPD11", 50),  # 902
       ("SAS11", 100),
       ("SCC11", 50),
-      ("SCC12", 50),
+      ("SCC12", 50),  # 1057
     ]
 
     if CP.carFingerprint in FEATURES["use_bsm"]:
@@ -336,7 +336,7 @@ class CarState(CarStateBase):
       ]
       checks += [
         ("EMS12", 100),
-        ("EMS16", 100),
+        ("EMS16", 100),   # 608
       ]
 
     if CP.carFingerprint in FEATURES["use_cluster_gears"]:

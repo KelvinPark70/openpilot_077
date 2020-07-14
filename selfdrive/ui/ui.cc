@@ -338,11 +338,20 @@ void handle_message(UIState *s, SubMaster &sm) {
         }
       }
     }
+
+    scene.angleSteers = scene.controls_state.getAngleSteers();
+    scene.angleSteersDes = scene.controls_state.getAngleSteersDes();    
   }
   if (sm.updated("radarState")) {
     auto data = sm["radarState"].getRadarState();
     scene.lead_data[0] = data.getLeadOne();
     scene.lead_data[1] = data.getLeadTwo();
+
+
+    scene.lead_status = scene.lead_data[0].getStatus();
+    scene.lead_d_rel = scene.lead_data[0].getDRel();
+    scene.lead_y_rel = scene.lead_data[0].getYRel();
+    scene.lead_v_rel = scene.lead_data[0].getVRel();    
   }
   if (sm.updated("liveCalibration")) {
     scene.world_objects_visible = true;
@@ -376,6 +385,10 @@ void handle_message(UIState *s, SubMaster &sm) {
 #endif
   if (sm.updated("thermal")) {
     scene.thermal = sm["thermal"].getThermal();
+
+
+    scene.maxBatTemp = scene.thermal.getBat();
+    scene.maxCpuTemp = scene.thermal.getCpu0();     
   }
   if (sm.updated("ubloxGnss")) {
     auto data = sm["ubloxGnss"].getUbloxGnss();
