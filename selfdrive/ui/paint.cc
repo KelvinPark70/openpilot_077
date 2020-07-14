@@ -1,5 +1,6 @@
 #include "ui.hpp"
 #include <assert.h>
+#include <stdarg.h>
 #include <map>
 #include <cmath>
 #include "common/util.h"
@@ -33,10 +34,10 @@ const uint8_t alert_colors[][4] = {
 
 float  fFontSize = 0.8;
 
-/*
+
+
 static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
 {
-  //char speed_str[512];  
   char* msg_buf = NULL;
   va_list args;
   va_start(args, fmt);
@@ -44,7 +45,7 @@ static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
   va_end(args);
   nvgText(s->vg, x, y, msg_buf, NULL);
 }
-*/
+
 
 // Projects a point in car to space to the corresponding point in full frame
 // image space.
@@ -411,7 +412,7 @@ static void ui_draw_world(UIState *s) {
 
 
 
-/*
+
 //BB START: functions added for the display of various items
 static int bb_ui_draw_measure(UIState *s,  const char* bb_value, const char* bb_uom, const char* bb_label,
     int bb_x, int bb_y, int bb_uom_dx,
@@ -664,7 +665,7 @@ static void bb_ui_draw_UI(UIState *s)
   bb_ui_draw_measures_left(s, bb_dmr_x, bb_dmr_y, bb_dmr_w);
 }
 //BB END: functions added for the display of various items
-*/
+
 
 
 static void ui_draw_vision_maxspeed(UIState *s) {
