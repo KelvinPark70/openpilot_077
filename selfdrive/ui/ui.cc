@@ -339,6 +339,7 @@ void handle_message(UIState *s, SubMaster &sm) {
       }
     }
 
+    scene.engaged = scene.controls_state.getEnabled();
     scene.angleSteers = scene.controls_state.getAngleSteers();
     scene.angleSteersDes = scene.controls_state.getAngleSteersDes();    
   }

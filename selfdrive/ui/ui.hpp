@@ -140,6 +140,7 @@ typedef struct UIScene {
   float angleSteers;  
   float angleSteersDes;  
 
+  int  engaged;
   int lead_status;
   float lead_d_rel, lead_y_rel, lead_v_rel;  
 } UIScene;
