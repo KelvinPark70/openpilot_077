@@ -1,6 +1,5 @@
 #include "ui.hpp"
 #include <assert.h>
-#include <stdarg.h>
 #include <map>
 #include <cmath>
 #include "common/util.h"
@@ -35,7 +34,7 @@ const uint8_t alert_colors[][4] = {
 float  fFontSize = 0.8;
 
 
-
+/*
 static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
 {
   char* msg_buf = NULL;
@@ -45,7 +44,7 @@ static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
   va_end(args);
   nvgText(s->vg, x, y, msg_buf, NULL);
 }
-
+*/
 
 // Projects a point in car to space to the corresponding point in full frame
 // image space.
