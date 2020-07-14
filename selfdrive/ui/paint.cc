@@ -727,7 +727,7 @@ static void ui_draw_vision_maxspeed(UIState *s) {
   }
 
   //BB START: add new measures panel  const int bb_dml_w = 180;
- // bb_ui_draw_UI(s);
+  bb_ui_draw_UI(s);
   //BB END: add new measures panel   
 }
 
