@@ -3,6 +3,9 @@
 #include <map>
 #include <cmath>
 #include "common/util.h"
+#include "common/params.h"
+#include "common/swaglog.h"
+
 
 #define NANOVG_GLES3_IMPLEMENTATION
 
