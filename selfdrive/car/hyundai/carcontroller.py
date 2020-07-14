@@ -79,8 +79,7 @@ class CarController():
                                    left_lane, right_lane,
                                    left_lane_warning, right_lane_warning))
 
-    # 50 Hz LFA MFA message
-    if frame % 2 == 0 and self.car_fingerprint in [CAR.GRANDEUR_H_19]:
+    if  self.car_fingerprint in [CAR.GRANDEUR_H_19]:
       can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
 
     if pcm_cancel_cmd and self.CP.openpilotLongitudinalControl:
