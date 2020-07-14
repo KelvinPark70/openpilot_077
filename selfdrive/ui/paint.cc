@@ -33,6 +33,7 @@ const uint8_t alert_colors[][4] = {
 
 float  fFontSize = 0.8;
 
+/*
 static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
 {
   //char speed_str[512];  
@@ -41,9 +42,9 @@ static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
   va_start(args, fmt);
   vasprintf( &msg_buf, fmt, args);
   va_end(args);
-
   nvgText(s->vg, x, y, msg_buf, NULL);
 }
+*/
 
 // Projects a point in car to space to the corresponding point in full frame
 // image space.
