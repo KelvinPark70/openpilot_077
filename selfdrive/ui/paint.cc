@@ -130,13 +130,15 @@ static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int
   nvgRestore(vg);  
 }
 
-static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int image, bool active) {
+static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int image, bool active) 
+{
   float bg_alpha = active ? 0.3f : 0.1f;
   float img_alpha = active ? 1.0f : 0.15f;
   ui_draw_circle_image(vg, x, y, size, image, nvgRGBA(0, 0, 0, (255 * bg_alpha)), img_alpha);
 }
 
-static void draw_lead(UIState *s, const cereal::RadarState::LeadData::Reader &lead){
+static void draw_lead(UIState *s, const cereal::RadarState::LeadData::Reader &lead)
+{
   // Draw lead car indicator
   float fillAlpha = 0;
   float speedBuff = 10.;
