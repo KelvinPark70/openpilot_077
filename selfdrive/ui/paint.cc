@@ -109,7 +109,7 @@ static void draw_chevron(UIState *s, float x_in, float y_in, float sz,
   nvgFill(s->vg);
 }
 
-static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int image, NVGcolor color, float img_alpha, float angleSteers ) // int img_y = 0) 
+static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int image, NVGcolor color, float img_alpha, float angleSteers = 0 ) // int img_y = 0) 
 {
   float img_rotation =  angleSteers/180*3.141592;
   int ct_pos = -size * 0.75;
