@@ -26,8 +26,8 @@ const int HYUNDAI_DRIVER_TORQUE_ALLOWANCE = 50;
 const int HYUNDAI_DRIVER_TORQUE_FACTOR = 2;
 const int HYUNDAI_STANDSTILL_THRSLD = 30;  // ~1kph
 const CanMsg HYUNDAI_TX_MSGS[] = {
-  {ADDR_LKAS11, 0, 8}, {ADDR_LKAS11, 1, 8}, // LKAS11 Bus 0,1
-  {ADDR_CLU11, 0, 4}, // CLU11 Bus 0
+  {ADDR_LKAS11, 0, 8}, //{ADDR_LKAS11, 1, 8}, // LKAS11 Bus 0,1
+  {ADDR_CLU11, 0, 4}, //{ADDR_CLU11, 1, 4}, {ADDR_CLU11, 2, 4},  // CLU11 Bus 0
  // {ADDR_LFAHDA_MFC, 0, 4}, // LFAHDA_MFC Bus 0
   {ADDR_MDPS12, 2, 8},  // MDPS12, Bus 2
   // {1056, 0, 8}, //   SCC11,  Bus 0
