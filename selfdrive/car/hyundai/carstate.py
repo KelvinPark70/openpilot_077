@@ -235,6 +235,63 @@ class CarState(CarStateBase):
 
     return  leftBlindspot, rightBlindspot
 
+
+  @staticmethod
+  def get_parser_gears(CP, signals, checks):
+    if CP.carFingerprint in FEATURES["use_cluster_gears"]:
+      signals += [
+        ("CF_Clu_InhibitD", "CLU15", 0),
+        ("CF_Clu_InhibitP", "CLU15", 0),
+        ("CF_Clu_InhibitN", "CLU15", 0),
+        ("CF_Clu_InhibitR", "CLU15", 0),
+      ]
+      checks += [
+        ("CLU15", 5)
+      ]
+    elif CP.carFingerprint in FEATURES["use_tcu_gears"]:
+      signals += [
+        ("CUR_GR", "TCU12", 0)
+      ]
+      checks += [
+        ("TCU12", 100)
+      ]
+    elif CP.carFingerprint in FEATURES["use_elect_gears"]:
+      signals += [("Elect_Gear_Shifter", "ELECT_GEAR", 0)]
+      checks += [("ELECT_GEAR", 20)]
+    else:
+      signals += [
+        ("CF_Lvr_Gear", "LVR12", 0)
+      ]
+      checks += [
+        ("LVR12", 100)
+      ]
+
+    return signals, checks
+
+
+  @staticmethod
+  def get_parser_ev_hybrid(CP, signals, checks):
+    if CP.carFingerprint in EV_HYBRID:
+      signals += [
+        ("Accel_Pedal_Pos", "E_EMS11", 0),
+      ]
+      checks += [
+        ("E_EMS11", 50),
+      ]
+    else:
+      signals += [
+        ("PV_AV_CAN", "EMS12", 0),
+        ("CF_Ems_AclAct", "EMS16", 0),
+      ]
+      checks += [
+        ("EMS12", 100), 
+        ("EMS16", 100),  # 608
+      ]
+
+    return signals, checks    
+
+
+
   @staticmethod
   def get_can_parser(CP):
     signals = [
@@ -328,6 +385,9 @@ class CarState(CarStateBase):
       ("SCC12", 50),  # 1057
     ]
 
+    signals, checks = CarState.get_parser_ev_hybrid( CP, signals, checks )
+    signals, checks = CarState.get_parser_gears( CP, signals, checks )
+
     if CP.carFingerprint in FEATURES["use_bsm"]:
       signals += [
         ("CF_Lca_IndLeft", "LCA11", 0),
@@ -335,50 +395,7 @@ class CarState(CarStateBase):
       ]
       checks += [("LCA11", 50)]
 
-    if CP.carFingerprint in EV_HYBRID:
-      signals += [
-        ("Accel_Pedal_Pos", "E_EMS11", 0),
-      ]
-      checks += [
-        ("E_EMS11", 50),
-      ]
-    else:
-      signals += [
-        ("PV_AV_CAN", "EMS12", 0),
-        ("CF_Ems_AclAct", "EMS16", 0),
-      ]
-      checks += [
-        ("EMS12", 100),
-        ("EMS16", 100),   # 608
-      ]
 
-    if CP.carFingerprint in FEATURES["use_cluster_gears"]:
-      signals += [
-        ("CF_Clu_InhibitD", "CLU15", 0),
-        ("CF_Clu_InhibitP", "CLU15", 0),
-        ("CF_Clu_InhibitN", "CLU15", 0),
-        ("CF_Clu_InhibitR", "CLU15", 0),
-      ]
-      checks += [
-        ("CLU15", 5)
-      ]
-    elif CP.carFingerprint in FEATURES["use_tcu_gears"]:
-      signals += [
-        ("CUR_GR", "TCU12", 0)
-      ]
-      checks += [
-        ("TCU12", 100)
-      ]
-    elif CP.carFingerprint in FEATURES["use_elect_gears"]:
-      signals += [("Elect_Gear_Shifter", "ELECT_GEAR", 0)]
-      checks += [("ELECT_GEAR", 20)]
-    else:
-      signals += [
-        ("CF_Lvr_Gear", "LVR12", 0)
-      ]
-      checks += [
-        ("LVR12", 100)
-      ]
 
     if CP.carFingerprint in FEATURES["use_fca"]:
       signals += [
