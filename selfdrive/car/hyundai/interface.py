@@ -23,7 +23,7 @@ class CarInterface(CarInterfaceBase):
     ret.radarOffCan = False   #False(선행차우선)  #True(차선우선)    #선행차량 인식 마크 유무.
 
     # Most Hyundai car ports are community features for now
-    ret.communityFeature = candidate not in [CAR.SONATA]
+    ret.communityFeature = False # candidate not in [CAR.SONATA]
 
 
     ret.steerActuatorDelay = 0.1  # Default delay
