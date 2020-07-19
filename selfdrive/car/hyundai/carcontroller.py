@@ -63,6 +63,8 @@ class CarController():
     if not lkas_active:
       apply_steer = 0
 
+    steer_req = 1 if apply_steer else 0      
+
     self.apply_steer_last = apply_steer
 
     sys_warning, sys_state, left_lane_warning, right_lane_warning =\
@@ -75,13 +77,13 @@ class CarController():
     self.lkas11_cnt = (self.lkas11_cnt + 1) % 0x10
 
 
-    if  self.car_fingerprint in [CAR.GRANDEUR_H_19]:
-      can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
-
-    can_sends.append(create_lkas11(self.packer, self.lkas11_cnt, self.car_fingerprint, apply_steer, lkas_active,
+    can_sends.append(create_lkas11(self.packer, self.lkas11_cnt, self.car_fingerprint, apply_steer, steer_req,
                                    CS.lkas11, sys_warning, sys_state, enabled,
                                    left_lane, right_lane,
                                    left_lane_warning, right_lane_warning))
+
+    if  self.car_fingerprint in [CAR.GRANDEUR_H_19]:
+      can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))                                   
 
 
     if pcm_cancel_cmd and self.CP.openpilotLongitudinalControl:
