@@ -106,16 +106,24 @@ static void handle_sidebar_touch(UIState *s, int touch_x, int touch_y) {
   }
 }
 
-static void handle_vision_touch(UIState *s, int touch_x, int touch_y) {
+static void handle_openpilot_view_touch() 
+{
+  write_db_value("IsDriverViewEnabled", "0", 1);
+}
+
+static void handle_vision_touch(UIState *s, int touch_x, int touch_y) 
+{
   if (s->started && (touch_x >= s->scene.ui_viz_rx - bdr_s)
     && (s->active_app != cereal::UiLayoutState::App::SETTINGS)) {
     if (!s->scene.frontview) {
       s->scene.uilayout_sidebarcollapsed = !s->scene.uilayout_sidebarcollapsed;
+    
     } else {
-      write_db_value("IsDriverViewEnabled", "0", 1);
+      handle_openpilot_view_touch();
     }
   }
 }
+
 
 volatile sig_atomic_t do_exit = 0;
 static void set_do_exit(int sig) {
@@ -326,11 +334,21 @@ void handle_message(UIState *s, SubMaster &sm) {
         }
       }
     }
+
+    scene.engaged = scene.controls_state.getEnabled();
+    scene.angleSteers = scene.controls_state.getAngleSteers();
+    scene.angleSteersDes = scene.controls_state.getAngleSteersDes();    
   }
   if (sm.updated("radarState")) {
     auto data = sm["radarState"].getRadarState();
     scene.lead_data[0] = data.getLeadOne();
     scene.lead_data[1] = data.getLeadTwo();
+
+
+    scene.lead_status = scene.lead_data[0].getStatus();
+    scene.lead_d_rel = scene.lead_data[0].getDRel();
+    scene.lead_y_rel = scene.lead_data[0].getYRel();
+    scene.lead_v_rel = scene.lead_data[0].getVRel();    
   }
   if (sm.updated("liveCalibration")) {
     scene.world_objects_visible = true;
@@ -364,6 +382,10 @@ void handle_message(UIState *s, SubMaster &sm) {
 #endif
   if (sm.updated("thermal")) {
     scene.thermal = sm["thermal"].getThermal();
+
+
+    scene.maxBatTemp = scene.thermal.getBat();
+    scene.maxCpuTemp = scene.thermal.getCpu0();     
   }
   if (sm.updated("ubloxGnss")) {
     auto data = sm["ubloxGnss"].getUbloxGnss();
@@ -480,6 +502,8 @@ static void ui_update(UIState *s) {
 
     assert(glGetError() == GL_NO_ERROR);
 
+
+    
     s->scene.uilayout_sidebarcollapsed = true;
     s->scene.ui_viz_rx = (box_x-sbr_w+bdr_s*2);
     s->scene.ui_viz_rw = (box_w+sbr_w-(bdr_s*2));
@@ -777,8 +801,16 @@ int main(int argc, char* argv[]) {
     int touched = touch_poll(&touch, &touch_x, &touch_y, 0);
     if (touched == 1) {
       set_awake(s, true);
-      handle_sidebar_touch(s, touch_x, touch_y);
-      handle_vision_touch(s, touch_x, touch_y);
+
+      if( touch_x  < 1660 || touch_y < 885 )
+      { 
+        handle_sidebar_touch(s, touch_x, touch_y);
+        handle_vision_touch(s, touch_x, touch_y);
+      }
+      else
+      {
+        handle_openpilot_view_touch();
+      }        
     }
 
     if (!s->started) {

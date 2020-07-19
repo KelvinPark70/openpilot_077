@@ -192,7 +192,7 @@ managed_processes = {
   "updated": "selfdrive.updated",
   "dmonitoringmodeld": ("selfdrive/modeld", ["./dmonitoringmodeld"]),
   "modeld": ("selfdrive/modeld", ["./modeld"]),
-  "driverview": "selfdrive.monitoring.driverview",
+  #"driverview": "selfdrive.monitoring.driverview",
 }
 
 daemon_processes = {
@@ -430,10 +430,24 @@ def manager_thread():
   cloudlog.info("manager start")
   cloudlog.info({"environ": os.environ})
 
-  # save boot log
-  subprocess.call(["./loggerd", "--bootlog"], cwd=os.path.join(BASEDIR, "selfdrive/loggerd"))
+
 
   params = Params()
+
+
+  EnableLogger = (params.get("RecordFront") != b"0")
+
+  if not EnableLogger:
+    car_started_processes.remove( 'loggerd' )
+    persistent_processes.remove( 'logmessaged' )
+    persistent_processes.remove( 'uploader' )
+    persistent_processes.remove( 'logcatd' )
+    persistent_processes.remove( 'updated' )
+    persistent_processes.remove( 'deleter' )
+  else:
+    # save boot log
+    subprocess.call(["./loggerd", "--bootlog"], cwd=os.path.join(BASEDIR, "selfdrive/loggerd"))  
+
 
   # start daemon processes
   for p in daemon_processes:
@@ -485,7 +499,8 @@ def manager_thread():
         kill_managed_process(p)
       # this is ugly
       if "driverview" not in running and params.get("IsDriverViewEnabled") == b"1":
-        start_managed_process("driverview")
+        pass
+        #start_managed_process("driverview")
       elif "driverview" in running and params.get("IsDriverViewEnabled") == b"0":
         kill_managed_process("driverview")
 
