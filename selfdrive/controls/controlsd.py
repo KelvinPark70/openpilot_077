@@ -259,9 +259,12 @@ class Controls:
     if not self.enabled:
       self.mismatch_counter = 0
 
-    if not self.sm['health'].controlsAllowed and self.enabled:
+    controlsAllowed = not self.sm['health'].controlsAllowed
+    if not controlsAllowed and self.enabled:
       self.mismatch_counter += 1
 
+    print( 'controlsAllowed={} self.mismatch_counter={}'.format( controlsAllowed, self.mismatch_counter ) )
+  
     self.distance_traveled += CS.vEgo * DT_CTRL
 
     return CS
