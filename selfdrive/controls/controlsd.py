@@ -195,7 +195,7 @@ class Controls:
                                         LaneChangeState.laneChangeFinishing]:
       self.events.add(EventName.laneChange)
 
-    print( 'can rcv error ={}, canvalid={} frame={} '.format( self.can_rcv_error,  CS.canValid, self.sm.frame ) )
+    #print( 'can rcv error ={}, canvalid={} frame={} '.format( self.can_rcv_error,  CS.canValid, self.sm.frame ) )
     if self.can_rcv_error or (not CS.canValid and self.sm.frame > 5 / DT_CTRL):
       self.events.add(EventName.canError)
     if self.mismatch_counter >= 200:
