@@ -9,7 +9,8 @@ const int HYUNDAI_STANDSTILL_THRSLD = 30;  // ~1kph
 const CanMsg HYUNDAI_TX_MSGS[] = {
   {832, 0, 8},  // LKAS11 Bus 0
   {1265, 0, 4}, // CLU11 Bus 0
-  {1157, 0, 4}, // LFAHDA_MFC Bus 0
+ // {1157, 0, 4}, // LFAHDA_MFC Bus 0
+  {593, 2, 8}, 
   // {1056, 0, 8}, //   SCC11,  Bus 0
   // {1057, 0, 8}, //   SCC12,  Bus 0
   // {1290, 0, 8}, //   SCC13,  Bus 0
@@ -20,7 +21,7 @@ const CanMsg HYUNDAI_TX_MSGS[] = {
 // TODO: missing checksum for wheel speeds message,worst failure case is
 //       wheel speeds stuck at 0 and we don't disengage on brake press
 AddrCheckStruct hyundai_rx_checks[] = {
-  {.msg = {{608, 0, 8, .check_checksum = true, .max_counter = 3U, .expected_timestep = 10000U}}},
+  //{.msg = {{608, 0, 8, .check_checksum = true, .max_counter = 3U, .expected_timestep = 10000U}}},
   {.msg = {{902, 0, 8, .check_checksum = false, .max_counter = 15U, .expected_timestep = 10000U}}},
   {.msg = {{916, 0, 8, .check_checksum = true, .max_counter = 7U, .expected_timestep = 10000U}}},
   {.msg = {{1057, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}}},
