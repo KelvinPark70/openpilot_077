@@ -121,27 +121,32 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
   }
 
   // check if we have a LCAN on Bus1
-  if (bus == 1 && (addr == 1296 || addr == 524)) {
-    if (hyundai_forward_bus1 || !hyundai_LCAN_on_bus1) {
-      hyundai_LCAN_on_bus1 = true;
-      hyundai_forward_bus1 = false;
+  if( bus == 1 )
+  {
+    if (addr == 1296 || addr == 524) {
+      if (hyundai_forward_bus1 || !hyundai_LCAN_on_bus1) {
+        hyundai_LCAN_on_bus1 = true;
+        hyundai_forward_bus1 = false;
+      }
     }
-  }
-  // check if we have a MDPS on Bus1 and LCAN not on the bus
-  if (bus == 1 && (addr == 593 || addr == 897) && !hyundai_LCAN_on_bus1) {
-    if (hyundai_mdps_bus != bus || !hyundai_forward_bus1) {
-      hyundai_mdps_bus = bus;
-      hyundai_forward_bus1 = true;
+    // check if we have a MDPS on Bus1 and LCAN not on the bus
+    if ((addr == 593 || addr == 897) && !hyundai_LCAN_on_bus1) {
+      if (hyundai_mdps_bus != bus || !hyundai_forward_bus1) {
+        hyundai_mdps_bus = bus;
+        hyundai_forward_bus1 = true;
+      }
     }
-  }
-  // check if we have a SCC on Bus1 and LCAN not on the bus
-  if (bus == 1 && addr == 1057 && !hyundai_LCAN_on_bus1) {
-    if (!hyundai_forward_bus1) {
-      hyundai_forward_bus1 = true;
+    // check if we have a SCC on Bus1 and LCAN not on the bus
+    if (addr == 1057 && !hyundai_LCAN_on_bus1) {
+      if (!hyundai_forward_bus1) {
+        hyundai_forward_bus1 = true;
+      }
     }
   }
 
-  if (valid) {
+
+  if (valid) 
+  {
     if (addr == 593 && bus == hyundai_mdps_bus) {
       int torque_driver_new = ((GET_BYTES_04(to_push) & 0x7ff) * 0.79) - 808; // scale down new driver torque signal to match previous one
       // update array of samples
