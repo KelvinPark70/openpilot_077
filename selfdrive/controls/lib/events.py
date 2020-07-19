@@ -171,7 +171,7 @@ class EngagementAlert(Alert):
 
 def below_steer_speed_alert(CP, sm, metric):
   speed = int(round(CP.minSteerSpeed * (CV.MS_TO_KPH if metric else CV.MS_TO_MPH)))
-  unit = "kph" if metric else "mph"
+  unit = "km/h" if metric else "mi/h"
   return Alert(
     "TAKE CONTROL",
     "Steer Unavailable Below %d %s" % (speed, unit),
@@ -180,7 +180,7 @@ def below_steer_speed_alert(CP, sm, metric):
 
 def calibration_incomplete_alert(CP, sm, metric):
   speed = int(Filter.MIN_SPEED * (CV.MS_TO_KPH if metric else CV.MS_TO_MPH))
-  unit = "kph" if metric else "mph"
+  unit = "km/h" if metric else "mi/h"
   return Alert(
     "Calibration in Progress: %d%%" % sm['liveCalibration'].calPerc,
     "Drive Above %d %s" % (speed, unit),
@@ -608,12 +608,12 @@ EVENTS = {
   },
 
   EventName.doorOpen: {
-    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage),
+    ET.SOFT_DISABLE: SoftDisableAlert("Door Open"),
     ET.NO_ENTRY: NoEntryAlert("Door open"),
   },
 
   EventName.seatbeltNotLatched: {
-    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage),
+    ET.SOFT_DISABLE: SoftDisableAlert("Seatbelt Unlatched"),
     ET.NO_ENTRY: NoEntryAlert("Seatbelt unlatched"),
   },
 
@@ -719,11 +719,8 @@ EVENTS = {
   },
 
   EventName.plannerError: {
-    ET.WARNING: Alert(
-    "TAKE CONTROL",
-    "Planner Solution Error",
-    AlertStatus.userPrompt, AlertSize.mid,
-    Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimePrompt, 0., 0., 5.),
+    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Planner Solution Error"),
+    ET.NO_ENTRY: NoEntryAlert("Planner Solution Error"),
   },
 
   EventName.relayMalfunction: {
