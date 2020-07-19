@@ -26,7 +26,7 @@ class CarInterface(CarInterfaceBase):
     ret.communityFeature = False # candidate not in [CAR.SONATA]
 
 
-    ret.steerActuatorDelay = 0.1  # Default delay
+    ret.steerActuatorDelay = 0.3  # Default delay
     ret.steerRateCost = 0.5
     ret.steerLimitTimer = 0.4
     tire_stiffness_factor = 1.
@@ -35,9 +35,22 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kf = 0.000005      
       ret.mass = 1675. + STD_CARGO_KG
       ret.wheelbase = 2.845
-      ret.steerRatio = 12.37  #12.5
+      ret.steerRatio = 12.5  #12.5
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
+
+
+
+      ret.lateralTuning.init('lqr')
+      ret.lateralTuning.lqr.scale = 2000.0
+      ret.lateralTuning.lqr.ki = 0.05
+      ret.lateralTuning.lqr.a = [0., 1., -0.22619643, 1.21822268]
+      ret.lateralTuning.lqr.b = [-1.92006585e-04, 3.95603032e-05]
+      ret.lateralTuning.lqr.c = [1., 0.]
+      ret.lateralTuning.lqr.k = [-100., 450.]
+      ret.lateralTuning.lqr.l = [0.22, 0.318]
+      ret.lateralTuning.lqr.dcGain = 0.003
+
     elif candidate == CAR.SANTA_FE:
       ret.lateralTuning.pid.kf = 0.00005
       ret.mass = 3982. * CV.LB_TO_KG + STD_CARGO_KG
