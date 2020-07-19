@@ -69,21 +69,17 @@ class CarState(CarStateBase):
     ret.leftBlinker, ret.rightBlinker = self.update_blinker(cp)
 
     # cruise state
-    ret.cruiseState.available = True
-    ret.cruiseState.enabled = cp.vl["SCC12"]['ACCMode'] != 0
-
-    self.main_on = ret.cruiseState.enabled
-    self.acc_active = ret.cruiseState.enabled
-
-    #self.main_on = (cp.vl["SCC11"]["MainMode_ACC"] != 0)  # 1056
-    #self.acc_active = (cp.vl["SCC12"]['ACCMode'] != 0)    # 1057
+    #ret.cruiseState.available = True
+    #ret.cruiseState.enabled = cp.vl["SCC12"]['ACCMode'] != 0
+    self.main_on = (cp.vl["SCC11"]["MainMode_ACC"] != 0)  # 1056
+    self.acc_active = (cp.vl["SCC12"]['ACCMode'] != 0)    # 1057
     self.update_atom( cp, cp_cam )
 
     ret.cruiseState.available = self.main_on
     ret.cruiseState.enabled =  ret.cruiseState.available
     ret.cruiseState.standstill = cp.vl["SCC11"]['SCCInfoDisplay'] == 4.
 
-    if ret.cruiseState.enabled:
+    if self.acc_active:
       is_set_speed_in_mph = int(cp.vl["CLU11"]["CF_Clu_SPEED_UNIT"])
       speed_conv = CV.MPH_TO_MS if is_set_speed_in_mph else CV.KPH_TO_MS
       ret.cruiseState.speed = cp.vl["SCC11"]['VSetDis'] * speed_conv

@@ -201,12 +201,15 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
       cruise_engaged_prev = cruise_button;
     }
     // exit controls on rising edge of gas press for cars with long control
-    if (addr == 608 && OP_SCC_live && bus == 0) {
-      gas_pressed = (GET_BYTE(to_push, 7) >> 6) != 0;
+    if (OP_SCC_live && bus == 0 && ((addr == 608) || (hyundai_legacy && (addr == 881))) ) 
+    {
+      if (addr == 608) {
+        gas_pressed = (GET_BYTE(to_push, 7) >> 6) != 0;
+      } else if( hyundai_legacy ) {
+        gas_pressed = (((GET_BYTE(to_push, 4) & 0x7F) << 1) | GET_BYTE(to_push, 3) >> 7) != 0;
+      }
     }
-    if (addr == 881 && hyundai_legacy && OP_SCC_live && bus == 0) {
-      gas_pressed = (((GET_BYTE(to_push, 4) & 0x7F) << 1) | GET_BYTE(to_push, 3) >> 7) != 0;
-    }
+
     // sample wheel speed, averaging opposite corners
     if (addr == 902 && bus == 0) {
       int hyundai_speed = GET_BYTES_04(to_push) & 0x3FFF;  // FL
@@ -219,7 +222,11 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
       brake_pressed = (GET_BYTE(to_push, 6) >> 7) != 0;
     }
 
-    generic_rx_checks( (bus == 0) && (addr == 832));
+    if ( bus == 0 )
+    {
+        generic_rx_checks( (addr == 832));
+    }
+    
   }
   return valid;
 }
