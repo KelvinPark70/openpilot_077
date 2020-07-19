@@ -304,6 +304,13 @@ class CarState(CarStateBase):
       ("ACC_ObjDist", "SCC11", 0),
       ("ACC_ObjRelSpd", "SCC11", 0),
       ("ACCMode", "SCC12", 1),
+
+
+      #("LFA_USM", "LFAHDA_MFC", 0),
+      #("LFA_SysWarning", "LFAHDA_MFC", 0),
+      #("ACTIVE2", "LFAHDA_MFC", 0),
+      #("HDA_USM", "LFAHDA_MFC", 0),
+      #("ACTIVE", "LFAHDA_MFC", 0),
     ]
 
     checks = [
