@@ -74,13 +74,15 @@ class CarController():
       self.lkas11_cnt = CS.lkas11["CF_Lkas_MsgCount"]
     self.lkas11_cnt = (self.lkas11_cnt + 1) % 0x10
 
+
+    if  self.car_fingerprint in [CAR.GRANDEUR_H_19]:
+      can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
+
     can_sends.append(create_lkas11(self.packer, self.lkas11_cnt, self.car_fingerprint, apply_steer, lkas_active,
                                    CS.lkas11, sys_warning, sys_state, enabled,
                                    left_lane, right_lane,
                                    left_lane_warning, right_lane_warning))
 
-    if  self.car_fingerprint in [CAR.GRANDEUR_H_19]:
-      can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
 
     if pcm_cancel_cmd and self.CP.openpilotLongitudinalControl:
       can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.CANCEL))
