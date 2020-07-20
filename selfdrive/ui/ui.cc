@@ -337,7 +337,22 @@ void handle_message(UIState *s, SubMaster &sm) {
 
     scene.engaged = scene.controls_state.getEnabled();
     scene.angleSteers = scene.controls_state.getAngleSteers();
-    scene.angleSteersDes = scene.controls_state.getAngleSteersDes();    
+    scene.angleSteersDes = scene.controls_state.getAngleSteersDes();
+
+// debug Message
+    std::string user_text1 = data.getAlertTextMsg1();
+    std::string user_text2 = data.getAlertTextMsg2();
+    const char* va_text1 = user_text1.c_str();
+    const char* va_text2 = user_text2.c_str();    
+    if (va_text1) 
+      snprintf(scene.alert.text1, sizeof(scene.alert.text1), "%s", va_text1);
+    else 
+      scene.alert.text1[0] = '\0';
+
+    if (va_text2) 
+      snprintf(scene.alert.text2, sizeof(scene.alert.text2), "%s", va_text2);
+    else 
+      scene.alert.text2[0] = '\0';
   }
   if (sm.updated("radarState")) {
     auto data = sm["radarState"].getRadarState();

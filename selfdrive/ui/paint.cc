@@ -34,7 +34,7 @@ const uint8_t alert_colors[][4] = {
 float  fFontSize = 0.8;
 
 
-/*
+
 static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
 {
   char* msg_buf = NULL;
@@ -44,7 +44,7 @@ static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
   va_end(args);
   nvgText(s->vg, x, y, msg_buf, NULL);
 }
-*/
+
 
 // Projects a point in car to space to the corresponding point in full frame
 // image space.
@@ -790,6 +790,31 @@ static void ui_draw_vision_speedlimit(UIState *s) {
 }
 #endif
 
+
+static void ui_draw_debug(UIState *s) 
+{
+  UIScene &scene = s->scene;
+  int ui_viz_rx = scene.ui_viz_rx;
+  int ui_viz_rw = scene.ui_viz_rw;
+
+  char str_msg[512];
+
+  const int viz_speed_w = 280;
+  const int viz_speed_x = ui_viz_rx+((ui_viz_rw/2)-(viz_speed_w/2));
+
+
+
+  
+
+  nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
+  nvgFontSize(s->vg, 36*1.5*fFontSize);
+
+
+  ui_print( s, 0, 1020, "%s", scene.alert.text1 );
+  ui_print( s, 0, 1078, "%s", scene.alert.text2 );
+
+}
+
 static void ui_draw_vision_speed(UIState *s) {
   const UIScene *scene = &s->scene;
   float v_ego = s->scene.controls_state.getVEgo();
@@ -808,6 +833,8 @@ static void ui_draw_vision_speed(UIState *s) {
   snprintf(speed_str, sizeof(speed_str), "%d", (int)speed);
   ui_draw_text(s->vg, viz_speed_x + viz_speed_w / 2, 240, speed_str, 96*2.5, COLOR_WHITE, s->font_sans_bold);
   ui_draw_text(s->vg, viz_speed_x + viz_speed_w / 2, 320, s->is_metric?"kph":"mph", 36*2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);
+
+  ui_draw_debug( s );  
 }
 
 static void ui_draw_vision_event(UIState *s) {

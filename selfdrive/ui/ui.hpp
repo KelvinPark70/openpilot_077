@@ -143,6 +143,12 @@ typedef struct UIScene {
   int  engaged;
   int lead_status;
   float lead_d_rel, lead_y_rel, lead_v_rel;  
+
+  struct _STATUS_
+  {
+      char text1[512];
+      char text2[512];
+  } alert;
 } UIScene;
 
 typedef struct {
