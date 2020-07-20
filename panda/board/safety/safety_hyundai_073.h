@@ -37,13 +37,9 @@ const CanMsg HYUNDAI_TX_MSGS[] = {
 //       wheel speeds stuck at 0 and we don't disengage on brake press
 // TODO: refactor addr check to cleanly re-enable commented out checks for cars that have them
 AddrCheckStruct hyundai_rx_checks[] = {
-//  /  {.msg = {{608, 0, 8, .check_checksum = true, .max_counter = 3U, .expected_timestep = 10000U}}},
-//  {.msg = {{897, 0, 8, .max_counter = 255U,. expected_timestep = 10000U}}},
-  // TODO: older hyundai models don't populate the counter bits in 902
-  //{.msg = {{902, 0, 8, .max_counter = 15U,  .expected_timestep = 10000U}}},
-//  /  {.msg = {{902, 0, 8, .max_counter = 0U,  .expected_timestep = 10000U}}},
-  //{.msg = {{916, 0, 8, .check_checksum = true, .max_counter = 7U, .expected_timestep = 10000U}}},
-//  /  {.msg = {{916, 0, 8, .check_checksum = false, .max_counter = 0U, .expected_timestep = 10000U}}},
+  {.msg = {{608, 0, 8, .check_checksum = true, .max_counter = 3U, .expected_timestep = 10000U}}},
+  {.msg = {{902, 0, 8, .check_checksum = false, .max_counter = 15U, .expected_timestep = 10000U}}},
+  {.msg = {{916, 0, 8, .check_checksum = true, .max_counter = 7U, .expected_timestep = 10000U}}},
   {.msg = {{1057, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}}},
 };
 
@@ -114,14 +110,21 @@ static uint8_t hyundai_compute_checksum(CAN_FIFOMailBox_TypeDef *to_push) {
 
 static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) 
 {
+  bool valid;
 
-  bool valid = addr_safety_check(to_push, hyundai_rx_checks, HYUNDAI_RX_CHECK_LEN,
+  if( hyundai_legacy )
+  {
+    valid = addr_safety_check(to_push, hyundai_legacy_rx_checks, HYUNDAI_LEGACY_RX_CHECK_LEN,
+                              hyundai_get_checksum, hyundai_compute_checksum,
+                              hyundai_get_counter);
+
+  } else {
+    valid = addr_safety_check(to_push, hyundai_rx_checks, HYUNDAI_RX_CHECK_LEN,
                                  hyundai_get_checksum, hyundai_compute_checksum,
                                  hyundai_get_counter);
+  }
 
-  //bool valid = addr_safety_check( to_push, hyundai_rx_checks, HYUNDAI_RX_CHECK_LEN, NULL, NULL, NULL );
-
-  bool unsafe_allow_gas = unsafe_mode & UNSAFE_DISABLE_DISENGAGE_ON_GAS;    
+ 
 
     // check if we have a LCAN on Bus1
     if( bus == 1 )
@@ -154,7 +157,7 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push)
     int bus = GET_BUS(to_push);
 
 
-    if (addr == 593 /*&& bus == hyundai_mdps_bus*/) {  // debug_atom
+    if (addr == 593 ) {
       int torque_driver_new = ((GET_BYTES_04(to_push) & 0x7ff) * 0.79) - 808; // scale down new driver torque signal to match previous one
       // update array of samples
       update_sample(&torque_driver, torque_driver_new);
@@ -212,15 +215,19 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push)
 
 
     // GAS_START: check gas pressed(START)
-
-
+    bool unsafe_allow_gas = unsafe_mode & UNSAFE_DISABLE_DISENGAGE_ON_GAS;       
     // exit controls on rising edge of gas press for cars with long control
-    if (addr == 608 && OP_SCC_live && bus == 0) {
-      gas_pressed = (GET_BYTE(to_push, 7) >> 6) != 0;
+    if( OP_SCC_live && bus == 0 && (addr == 608 || (hyundai_legacy && addr == 881)) ) {
+      if (addr == 608) {
+        gas_pressed = (GET_BYTE(to_push, 7) >> 6) != 0;
+      } else {
+        gas_pressed = (((GET_BYTE(to_push, 4) & 0x7F) << 1) | GET_BYTE(to_push, 3) >> 7) != 0;
+      }
+
       if (!unsafe_allow_gas && gas_pressed && !gas_pressed_prev) {
         controls_allowed = 0;
       }
-      gas_pressed_prev = gas_pressed;
+      gas_pressed_prev = gas_pressed;     
     }
 
     // sample subaru wheel speed, averaging opposite corners
@@ -240,7 +247,6 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push)
       brake_pressed_prev = brake_pressed;
     }
     // GAS_END: check gas pressed(END)
-
 
     // check if stock camera ECU is on bus 0
     if ((safety_mode_cnt > RELAY_TRNS_TIMEOUT) && bus == 0 && addr == 832) {
