@@ -5,6 +5,10 @@ from selfdrive.car.hyundai.hyundaican import create_lkas11, create_clu11, create
 from selfdrive.car.hyundai.values import Buttons, SteerLimitParams, CAR
 from opendbc.can.packer import CANPacker
 
+
+import common.log as trace1
+import common.CTime1000 as tm
+
 VisualAlert = car.CarControl.HUDControl.VisualAlert
 
 
@@ -46,6 +50,8 @@ class CarController():
 
     self.lkas11_cnt = 0
 
+    self.timer1 = tm.CTime1000("time")    
+
   def update(self, enabled, CS, frame, actuators, pcm_cancel_cmd, visual_alert,
              left_lane, right_lane, left_lane_depart, right_lane_depart):
     # Steering Torque
@@ -85,6 +91,11 @@ class CarController():
     if  self.car_fingerprint in [CAR.GRANDEUR_H_19]:
       can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))                                   
 
+
+
+    str_log1 = 'torg:{:5.0f}'.format( apply_steer )
+    str_log2 = 'limit={:.0f} tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
+    trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
     #print( 'st={} cmd={} long={}  steer={} req={}'.format(CS.out.cruiseState.standstill, pcm_cancel_cmd, self.CP.openpilotLongitudinalControl, apply_steer, steer_req ) )
 
