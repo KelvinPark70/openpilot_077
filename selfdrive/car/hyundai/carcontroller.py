@@ -93,8 +93,8 @@ class CarController():
 
 
 
-    str_log1 = 'torg:{:5.0f}'.format( apply_steer )
-    str_log2 = 'limit={:.0f} tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
+    str_log1 = 'torg:{:3.0f}'.format( apply_steer )
+    str_log2 = 'new_steer={:.0f} tm={:.1f} '.format( new_steer, self.timer1.sampleTime()  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
     #print( 'st={} cmd={} long={}  steer={} req={}'.format(CS.out.cruiseState.standstill, pcm_cancel_cmd, self.CP.openpilotLongitudinalControl, apply_steer, steer_req ) )
