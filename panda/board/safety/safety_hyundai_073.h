@@ -58,7 +58,8 @@ const int HYUNDAI_LEGACY_RX_CHECK_LEN = sizeof(hyundai_legacy_rx_checks) / sizeo
 
 bool hyundai_legacy = false;
 
-static uint8_t hyundai_get_counter(CAN_FIFOMailBox_TypeDef *to_push) {
+static uint8_t hyundai_get_counter(CAN_FIFOMailBox_TypeDef *to_push) 
+{
   int addr = GET_ADDR(to_push);
 
   uint8_t cnt;
@@ -76,7 +77,8 @@ static uint8_t hyundai_get_counter(CAN_FIFOMailBox_TypeDef *to_push) {
   return cnt;
 }
 
-static uint8_t hyundai_get_checksum(CAN_FIFOMailBox_TypeDef *to_push) {
+static uint8_t hyundai_get_checksum(CAN_FIFOMailBox_TypeDef *to_push) 
+{
   int addr = GET_ADDR(to_push);
 
   uint8_t chksum;
@@ -92,7 +94,8 @@ static uint8_t hyundai_get_checksum(CAN_FIFOMailBox_TypeDef *to_push) {
   return chksum;
 }
 
-static uint8_t hyundai_compute_checksum(CAN_FIFOMailBox_TypeDef *to_push) {
+static uint8_t hyundai_compute_checksum(CAN_FIFOMailBox_TypeDef *to_push) 
+{
   int addr = GET_ADDR(to_push);
 
   uint8_t chksum = 0;
@@ -110,7 +113,7 @@ static uint8_t hyundai_compute_checksum(CAN_FIFOMailBox_TypeDef *to_push) {
 
 static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) 
 {
-  bool valid;
+  bool valid = false;
 
   if( hyundai_legacy )
   {
@@ -125,36 +128,31 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push)
   }
 
  
+  int addr = GET_ADDR(to_push);
+  int bus = GET_BUS(to_push);
 
-    // check if we have a LCAN on Bus1
-    if( bus == 1 )
-    {
-      if (addr == 1296 || addr == 524) {
-        if (hyundai_forward_bus1 || !hyundai_LCAN_on_bus1) {
-          hyundai_LCAN_on_bus1 = true;
-          hyundai_forward_bus1 = false;
-        }
-      }
-      // check if we have a MDPS on Bus1 and LCAN not on the bus
-      if ((addr == 593 || addr == 897) && !hyundai_LCAN_on_bus1) {
-        if (hyundai_mdps_bus != bus || !hyundai_forward_bus1) {
-          hyundai_mdps_bus = bus;
-          hyundai_forward_bus1 = true;
-        }
-      }
-      // check if we have a SCC on Bus1 and LCAN not on the bus
-      if (addr == 1057 && !hyundai_LCAN_on_bus1) {
-        if (!hyundai_forward_bus1) {
-          hyundai_forward_bus1 = true;
-        }
-      }
+  // check if we have a LCAN on Bus1
+  if (bus == 1 && (addr == 1296 || addr == 524)) {
+    if (hyundai_forward_bus1 || !hyundai_LCAN_on_bus1) {
+      hyundai_LCAN_on_bus1 = true;
+      hyundai_forward_bus1 = false;
     }
+  }
+  // check if we have a MDPS on Bus1 and LCAN not on the bus
+  if (bus == 1 && (addr == 593 || addr == 897) && !hyundai_LCAN_on_bus1) {
+    if (hyundai_mdps_bus != bus || !hyundai_forward_bus1) {
+      hyundai_mdps_bus = bus;
+      hyundai_forward_bus1 = true;
+    }
+  }
+  // check if we have a SCC on Bus1 and LCAN not on the bus
+  if (bus == 1 && addr == 1057 && !hyundai_LCAN_on_bus1) {
+    if (!hyundai_forward_bus1) {
+      hyundai_forward_bus1 = true;
+    }
+  }
 
-  if( valid == 0 ) return valid;
-
-
-    int addr = GET_ADDR(to_push);
-    int bus = GET_BUS(to_push);
+  if( valid == false ) return valid;
 
 
     if (addr == 593 ) {
@@ -211,7 +209,7 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push)
       }
       cruise_engaged_prev = cruise_engaged;
     }
-  // TODO: check gas pressed
+    // TODO: check gas pressed
 
 
     // GAS_START: check gas pressed(START)
