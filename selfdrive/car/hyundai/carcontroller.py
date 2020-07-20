@@ -86,6 +86,8 @@ class CarController():
       can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))                                   
 
 
+    print( 'st={} cmd={} long={}  steer={} req={}'.format(CS.out.cruiseState.standstill, pcm_cancel_cmd, self.CP.openpilotLongitudinalControl, apply_steer, steer_req ) )
+
     if pcm_cancel_cmd and self.CP.openpilotLongitudinalControl:
       can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.CANCEL))
     elif CS.out.cruiseState.standstill:
