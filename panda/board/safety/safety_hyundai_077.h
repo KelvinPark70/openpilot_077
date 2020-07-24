@@ -6,16 +6,7 @@ const int HYUNDAI_MAX_RATE_DOWN = 7;
 const int HYUNDAI_DRIVER_TORQUE_ALLOWANCE = 50;
 const int HYUNDAI_DRIVER_TORQUE_FACTOR = 2;
 const int HYUNDAI_STANDSTILL_THRSLD = 30;  // ~1kph
-bool hyundai_has_scc = false;
-int OP_LKAS_live = 0;
-int OP_MDPS_live = 0;
-int OP_CLU_live = 0;
-int OP_SCC_live = 0;
-int car_SCC_live = 0;
-int OP_EMS_live = 0;
-int hyundai_mdps_bus = 0;
-bool hyundai_LCAN_on_bus1 = false;
-bool hyundai_forward_bus1 = false;
+
 const CanMsg HYUNDAI_TX_MSGS[] = {
   {832, 0, 8}, //{832, 1, 8}, // LKAS11 Bus 0, 1
   {1265, 0, 4}, //{1265, 1, 4}, {1265, 2, 4}, // CLU11 Bus 0, 1, 2
@@ -52,6 +43,17 @@ AddrCheckStruct hyundai_legacy_rx_checks[] = {
 const int HYUNDAI_LEGACY_RX_CHECK_LEN = sizeof(hyundai_legacy_rx_checks) / sizeof(hyundai_legacy_rx_checks[0]);
 
 bool hyundai_legacy = false;
+
+bool hyundai_has_scc = false;
+int OP_LKAS_live = 0;
+int OP_MDPS_live = 0;
+int OP_CLU_live = 0;
+int OP_SCC_live = 0;
+int car_SCC_live = 0;
+int OP_EMS_live = 0;
+int hyundai_mdps_bus = 0;
+bool hyundai_LCAN_on_bus1 = false;
+bool hyundai_forward_bus1 = false;
 
 static uint8_t hyundai_get_counter(CAN_FIFOMailBox_TypeDef *to_push) {
   int addr = GET_ADDR(to_push);
@@ -201,12 +203,8 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
       cruise_engaged_prev = cruise_button;
     }
     // exit controls on rising edge of gas press for cars with long control
-    if (addr == 608 && OP_SCC_live && bus == 0) {
-      gas_pressed = (GET_BYTE(to_push, 7) >> 6) != 0;
-    }
-    if (addr == 881 && hyundai_legacy && OP_SCC_live && bus == 0) {
-      gas_pressed = (((GET_BYTE(to_push, 4) & 0x7F) << 1) | GET_BYTE(to_push, 3) >> 7) != 0;
-    }
+    gas_pressed = false;
+
     // sample wheel speed, averaging opposite corners
     if (addr == 902 && bus == 0) {
       int hyundai_speed = GET_BYTES_04(to_push) & 0x3FFF;  // FL
@@ -215,9 +213,7 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
       vehicle_moving = hyundai_speed > HYUNDAI_STANDSTILL_THRSLD;
     }
     // exit controls on rising edge of brake press for cars with long control
-    if (addr == 916 && OP_SCC_live && bus == 0) {
-      brake_pressed = (GET_BYTE(to_push, 6) >> 7) != 0;
-    }
+    brake_pressed = false;
 
     if ( bus == 0 )
     {
