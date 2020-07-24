@@ -5,10 +5,10 @@
 #include "safety/safety_defaults_HKG.h"
 // Include the actual safety company.
 //#include "safety/safety_hyundai.h"
-#include "safety/safety_hyundai_073.h"
+//#include "safety/safety_hyundai_073.h"
 //#include "safety/safety_hyundai_kyd.h"
 //#include "safety/safety_hyundai_076.h"
-//#include "safety/safety_hyundai_077.h"
+#include "safety/safety_hyundai_077.h"
 
 #include "safety/safety_honda.h"
 #include "safety/safety_toyota.h"
