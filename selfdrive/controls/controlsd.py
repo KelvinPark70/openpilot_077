@@ -407,8 +407,6 @@ class Controls:
     log_alertTextMsg2 = trace1.global_alertTextMsg2
     log_alertTextMsg1 += ' ctrl={}'.format( self.sm['health'].controlsAllowed )    
     
-    controlsState.alertTextMsg1 = str(trace1.global_alertTextMsg1)
-    controlsState.alertTextMsg2 = str(trace1.global_alertTextMsg2)  
 
     CC = car.CarControl.new_message()
     CC.enabled = self.enabled
