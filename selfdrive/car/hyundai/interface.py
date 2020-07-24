@@ -37,6 +37,8 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 1675. + STD_CARGO_KG
       ret.wheelbase = 2.845
       ret.steerRatio = 12.37  #12.5
+      ret.steerMaxBP = [0.] 
+      ret.steerMaxV = [1.3]
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
     elif candidate == CAR.SANTA_FE:
