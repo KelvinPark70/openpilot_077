@@ -98,9 +98,9 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push)
                               hyundai_get_counter);
 
   } else {
-    valid = addr_safety_check(to_push, hyundai_rx_checks, HYUNDAI_RX_CHECK_LEN,
-                              hyundai_get_checksum, hyundai_compute_checksum,
-                              hyundai_get_counter);
+    valid = addr_safety_check(to_push, hyundai_rx_checks, HYUNDAI_RX_CHECK_LEN, NULL, NULL, NULL );
+                              //hyundai_get_checksum, hyundai_compute_checksum,
+                              //hyundai_get_counter);
   }
 
   int addr = GET_ADDR(to_push);
