@@ -117,6 +117,7 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push)
     }
 
     // enter controls on rising edge of ACC, exit controls on ACC off
+    /*
     if (addr == 1057) 
     {
       // 2 bits: 13-14
@@ -129,7 +130,9 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push)
       }
       cruise_engaged_prev = cruise_engaged;
     }  
-    else if (addr == 1056 )  // for cars without long control
+    else
+    */ 
+    if (addr == 1056 )  // for cars without long control
     { 
       // 1 bits: 0  MainMode_ACC
       int cruise_engaged = GET_BYTES_04(to_push) & 0x1; // ACC main_on signal
