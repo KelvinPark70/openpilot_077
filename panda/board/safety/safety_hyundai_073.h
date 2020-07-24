@@ -35,7 +35,7 @@ AddrCheckStruct hyundai_rx_checks[] = {
   //{.msg = {{1057, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}}},
 
   //{.msg = {{593, 0, 8, .check_checksum = false, .max_counter = 0U, .expected_timestep = 20000U}}},
-  //{.msg = {{1057, 0, 8, .check_checksum = false, .max_counter = 15U, .expected_timestep = 20000U}}},
+  {.msg = {{1057, 0, 8, .check_checksum = false, .max_counter = 15U, .expected_timestep = 20000U}}},
 };
 
 const int HYUNDAI_RX_CHECK_LEN = sizeof(hyundai_rx_checks) / sizeof(hyundai_rx_checks[0]);
@@ -47,13 +47,13 @@ AddrCheckStruct hyundai_legacy_rx_checks[] = {
   //         {881, 0, 8, .expected_timestep = 10000U}}},
   //{.msg = {{902, 0, 8, .expected_timestep = 10000U}}},
   //{.msg = {{916, 0, 8, .expected_timestep = 10000U}}},
-  //{.msg = {{1057, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}}},
+  {.msg = {{1057, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}}},
 };
 const int HYUNDAI_LEGACY_RX_CHECK_LEN = sizeof(hyundai_legacy_rx_checks) / sizeof(hyundai_legacy_rx_checks[0]);
 
 bool hyundai_legacy = false;
 
-bool hyundai_has_scc = false;
+
 int OP_LKAS_live = 0;
 int OP_MDPS_live = 0;
 int OP_CLU_live = 0;
@@ -65,18 +65,18 @@ bool hyundai_forward_bus1 = false;
 
 static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) 
 {
-  bool valid = false;
+    bool valid = false;
 
 
 
-  if( hyundai_legacy )
-  {
-    valid = addr_safety_check(to_push, hyundai_legacy_rx_checks, HYUNDAI_LEGACY_RX_CHECK_LEN,
-                              NULL, NULL, NULL);                              
-  } else {
-    valid = addr_safety_check(to_push, hyundai_rx_checks, HYUNDAI_RX_CHECK_LEN,
-                                 NULL, NULL,  NULL);
-  }
+    if( hyundai_legacy )
+    {
+      valid = addr_safety_check(to_push, hyundai_legacy_rx_checks, HYUNDAI_LEGACY_RX_CHECK_LEN,
+                                NULL, NULL, NULL);                              
+    } else {
+      valid = addr_safety_check(to_push, hyundai_rx_checks, HYUNDAI_RX_CHECK_LEN,
+                                  NULL, NULL,  NULL);
+    }
 
    if( valid == false ) return valid;
 
@@ -114,7 +114,6 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push)
 
     // enter controls on rising edge of ACC, exit controls on ACC off
     if (addr == 1057 && OP_SCC_live && (bus != 1 || !hyundai_LCAN_on_bus1)) { // for cars with long control
-      hyundai_has_scc = true;
       // 2 bits: 13-14
       int cruise_engaged = (GET_BYTES_04(to_push) >> 13) & 0x3;
       if (cruise_engaged && !cruise_engaged_prev) {
@@ -126,7 +125,6 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push)
       cruise_engaged_prev = cruise_engaged;
     }
     if (addr == 1056 && !OP_SCC_live && (bus != 1 || !hyundai_LCAN_on_bus1)) { // for cars without long control
-      hyundai_has_scc = true;
       // 1 bits: 0  MainMode_ACC
       int cruise_engaged = GET_BYTES_04(to_push) & 0x1; // ACC main_on signal
       if (cruise_engaged && !cruise_engaged_prev) {
@@ -154,8 +152,8 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push)
     if(bus == 0) {
       generic_rx_checks((addr == 832));
     }
-  }
-  return valid;
+
+    return valid;
 }
 
 static int hyundai_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
