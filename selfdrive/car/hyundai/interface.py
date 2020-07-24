@@ -28,22 +28,21 @@ class CarInterface(CarInterfaceBase):
 
     ret.steerActuatorDelay = 0.3  # Default delay
     ret.steerRateCost = 0.5
-    ret.steerLimitTimer = 0.4
+    ret.steerLimitTimer = 0.8
     tire_stiffness_factor = 1.
 
     if candidate == CAR.GRANDEUR_H_19:
       ret.lateralTuning.pid.kf = 0.000005      
       ret.mass = 1675. + STD_CARGO_KG
       ret.wheelbase = 2.845
-      ret.steerRatio = 12.5  #12.5
+      ret.steerRatio = 13.7  #12.5
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
 
 
-
       ret.lateralTuning.init('lqr')
-      ret.lateralTuning.lqr.scale = 2500.0
-      ret.lateralTuning.lqr.ki = 0.05
+      ret.lateralTuning.lqr.scale = 2000.0
+      ret.lateralTuning.lqr.ki = 0.01
       ret.lateralTuning.lqr.a = [0., 1., -0.22619643, 1.21822268]
       ret.lateralTuning.lqr.b = [-1.92006585e-04, 3.95603032e-05]
       ret.lateralTuning.lqr.c = [1., 0.]
