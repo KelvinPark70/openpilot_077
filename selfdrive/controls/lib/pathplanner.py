@@ -195,7 +195,7 @@ class PathPlanner():
 
     self.angle_steers_des_mpc = float(math.degrees(delta_desired * VM.sR) + angle_offset)
     org_angle_steers_des = self.angle_steers_des_mpc
-    
+
     # atom
     if v_ego_kph < 20:
       xp = [5,10,20]
