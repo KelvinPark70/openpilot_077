@@ -152,6 +152,22 @@ class Controls:
 
     self.hyundai_lkas = self.read_only  #read_only
 
+    self.controlsAllowed = 0
+    self.timer_alloowed = 1500
+
+  def auto_enable(self, CS):
+    if self.startup_event != None or self.hyundai_lkas:
+      self.timer_alloowed = 500
+    elif not self.controlsAllowed or CS.vEgo < 15*CV.KPH_TO_MS or CS.gearShifter != 2:
+      if self.timer_alloowed < 100:
+        self.timer_alloowed = 100
+    elif self.enabled != self.controlsAllowed and self.state != State.enabled:
+      if self.timer_alloowed:
+        self.timer_alloowed -= 1
+      else:
+        self.timer_alloowed = 500
+        self.events.add( EventName.pcmEnable )
+
 
   def update_events(self, CS):
     """Compute carEvents from carState"""
@@ -241,6 +257,8 @@ class Controls:
        and not self.CP.radarOffCan and CS.vEgo < 0.3:
       self.events.add(EventName.noTarget)
 
+    self.auto_enable( CS )
+
   def data_sample(self):
     """Receive data from sockets and update carState"""
 
@@ -261,11 +279,10 @@ class Controls:
     # we want to disengage openpilot. However the status from the panda goes through
     # another socket other than the CAN messages and one can arrive earlier than the other.
     # Therefore we allow a mismatch for two samples, then we trigger the disengagement.
+    self.controlsAllowed = self.sm['health'].controlsAllowed    
     if not self.enabled:
       self.mismatch_counter = 0
-
-    controlsAllowed = self.sm['health'].controlsAllowed
-    if not controlsAllowed and self.enabled:
+    elif not self.controlsAllowed:
       self.mismatch_counter += 1
 
     #print( 'controlsAllowed={} self.mismatch_counter={}'.format( controlsAllowed, self.mismatch_counter ) )
@@ -351,6 +368,8 @@ class Controls:
     # Check if openpilot is engaged
     self.enabled = self.active or self.state == State.preEnabled
 
+
+
   def state_control(self, CS):
     """Given the state, this function returns an actuators packet"""
 
@@ -406,9 +425,10 @@ class Controls:
     """Send actuators and hud commands to the car, send controlsstate and MPC logging"""
     global trace1
 
+
     log_alertTextMsg1 = trace1.global_alertTextMsg1
     log_alertTextMsg2 = trace1.global_alertTextMsg2
-    log_alertTextMsg1 += ' ctrl={}'.format( self.sm['health'].controlsAllowed )    
+    log_alertTextMsg1 += ' ctrl={}'.format( self.controlsAllowed )    
     
 
     CC = car.CarControl.new_message()
