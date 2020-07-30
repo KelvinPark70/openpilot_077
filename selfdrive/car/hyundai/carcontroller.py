@@ -89,8 +89,8 @@ class CarController():
       self.steer_torque_ratio = 1
       return param
 
-    sec_pval = 0.5  # 0.5 sec 운전자 => 오파 
-    sec_mval = 5.0  # 오파 => 운전자.
+    sec_pval = 0.5  # 0.5 sec 운전자 => 오파  (sec)
+    sec_mval = 5.0  # 오파 => 운전자.  (sec)
     # streer over check
     if path_plan.laneChangeState != LaneChangeState.off:
       self.steer_torque_over_timer = 0
