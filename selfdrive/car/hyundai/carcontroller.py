@@ -89,7 +89,6 @@ class CarController():
       self.steer_torque_ratio = 1
       return param
 
-
     sec_pval = 0.5  # 0.5 sec 운전자 => 오파 
     sec_mval = 5.0  # 오파 => 운전자.
     # streer over check
