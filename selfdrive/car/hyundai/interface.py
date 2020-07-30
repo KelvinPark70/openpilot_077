@@ -9,6 +9,9 @@ class CarInterface(CarInterfaceBase):
   def __init__(self, CP, CarController, CarState):
     super().__init__(CP, CarController, CarState )
 
+    self.meg_timer = 0
+    self.meg_name = 0
+
     
   @staticmethod
   def compute_gb(accel, speed):
@@ -215,8 +218,27 @@ class CarInterface(CarInterfaceBase):
       self.low_speed_alert = True
     if ret.vEgo > (self.CP.minSteerSpeed + 4.):
       self.low_speed_alert = False
-    if self.low_speed_alert:
-      events.add(car.CarEvent.EventName.belowSteerSpeed)
+
+
+    meg_name = None
+    if not self.cruise_enabled_prev:
+      self.meg_timer = 0
+    elif self.meg_timer:
+      self.meg_timer -= 1      
+    elif not self.CS.lkas_button_on:
+      meg_name = EventName.invalidLkasSetting      
+    elif self.low_speed_alert:
+      meg_name = car.CarEvent.EventName.belowSteerSpeed
+    else:
+      self.meg_name =  None
+
+
+    if meg_name != None:
+      self.meg_timer = 100
+      self.meg_name = meg_name
+
+    if self.meg_timer and self.meg_name != None:
+      events.add( self.meg_name )
 
     ret.events = events.to_msg()
 
@@ -224,9 +246,8 @@ class CarInterface(CarInterfaceBase):
     return self.CS.out
 
   def apply(self, c):
-    can_sends = self.CC.update(c.enabled, self.CS, self.frame, c.actuators,
-                               c.cruiseControl.cancel, c.hudControl.visualAlert, c.hudControl.leftLaneVisible,
-                               c.hudControl.rightLaneVisible, c.hudControl.leftLaneDepart, c.hudControl.rightLaneDepart)
+    can_sends = self.CC.update( c, self.CS, self.frame )
+
     self.frame += 1
     return can_sends
 

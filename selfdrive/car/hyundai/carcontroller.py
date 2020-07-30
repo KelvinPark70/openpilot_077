@@ -12,31 +12,6 @@ import common.CTime1000 as tm
 VisualAlert = car.CarControl.HUDControl.VisualAlert
 
 
-def process_hud_alert(enabled, fingerprint, visual_alert, left_lane,
-                      right_lane, left_lane_depart, right_lane_depart):
-  sys_warning = (visual_alert == VisualAlert.steerRequired)
-
-  # initialize to no line visible
-  sys_state = 1
-  if left_lane and right_lane or sys_warning:  # HUD alert only display when LKAS status is active
-    if enabled or sys_warning:
-      sys_state = 3
-    else:
-      sys_state = 4
-  elif left_lane:
-    sys_state = 5
-  elif right_lane:
-    sys_state = 6
-
-  # initialize to no warnings
-  left_lane_warning = 0
-  right_lane_warning = 0
-  if left_lane_depart:
-    left_lane_warning = 1 if fingerprint in [CAR.GENESIS_G90, CAR.GENESIS_G80] else 2
-  if right_lane_depart:
-    right_lane_warning = 1 if fingerprint in [CAR.GENESIS_G90, CAR.GENESIS_G80] else 2
-
-  return sys_warning, sys_state, left_lane_warning, right_lane_warning
 
 
 class CarController():
@@ -50,10 +25,62 @@ class CarController():
 
     self.lkas11_cnt = 0
 
+    # hud
+    self.hud_timer_left = 0
+    self.hud_timer_right = 0    
+
     self.timer1 = tm.CTime1000("time")    
 
-  def update(self, enabled, CS, frame, actuators, pcm_cancel_cmd, visual_alert,
-             left_lane, right_lane, left_lane_depart, right_lane_depart):
+  def limit_ctrl(self, value, limit, offset ):
+      p_limit = offset + limit
+      m_limit = offset - limit
+      if value > p_limit:
+          value = p_limit
+      elif  value < m_limit:
+          value = m_limit
+      return value
+
+
+  def process_hud_alert(self, enabled, c ):
+    visual_alert = c.hudControl.visualAlert
+    left_lane = c.hudControl.leftLaneVisible
+    right_lane = c.hudControl.rightLaneVisible
+
+    sys_warning = (visual_alert == VisualAlert.steerRequired)
+
+    if left_lane:
+      self.hud_timer_left = 100
+
+    if right_lane:
+      self.hud_timer_right = 100
+
+    if self.hud_timer_left:
+      self.hud_timer_left -= 1
+ 
+    if self.hud_timer_right:
+      self.hud_timer_right -= 1
+
+
+    # initialize to no line visible
+    sys_state = 1
+    if self.hud_timer_left and self.hud_timer_right or sys_warning:  # HUD alert only display when LKAS status is active
+      if (self.steer_torque_ratio > 0.7) and (enabled or sys_warning):
+        sys_state = 3
+      else:
+        sys_state = 4
+    elif self.hud_timer_left:
+      sys_state = 5
+    elif self.hud_timer_right:
+      sys_state = 6
+
+    return sys_warning, sys_state
+
+
+  def update(self, c, CS, frame ):
+    enabled = c.enabled
+    actuators = c.actuators
+    pcm_cancel_cmd = c.cruiseControl.cancel
+
     # Steering Torque
     new_steer = actuators.steer * SteerLimitParams.STEER_MAX
     apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorque, SteerLimitParams)
@@ -73,9 +100,7 @@ class CarController():
 
     self.apply_steer_last = apply_steer
 
-    sys_warning, sys_state, left_lane_warning, right_lane_warning =\
-      process_hud_alert(enabled, self.car_fingerprint, visual_alert,
-                        left_lane, right_lane, left_lane_depart, right_lane_depart)
+    sys_warning, sys_state = self.process_hud_alert( lkas_active, c )
 
 
     if frame == 0: # initialize counts from last received count signals
@@ -84,9 +109,7 @@ class CarController():
 
     can_sends = []
     can_sends.append(create_lkas11(self.packer, self.lkas11_cnt, self.car_fingerprint, apply_steer, steer_req,
-                                   CS.lkas11, sys_warning, sys_state, enabled,
-                                   left_lane, right_lane,
-                                   left_lane_warning, right_lane_warning))
+                                   CS.lkas11, sys_warning, sys_state, c ))
 
     if  self.car_fingerprint in [CAR.GRANDEUR_H_19]:
       can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))                                   
