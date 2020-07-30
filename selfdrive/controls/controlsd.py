@@ -477,10 +477,11 @@ class Controls:
     self.AM.process_alerts(self.sm.frame)
     CC.hudControl.visualAlert = self.AM.visual_alert
 
-    if not self.hyundai_lkas and self.enabled:
+    if not self.hyundai_lkas and self.enabled and self.controlsAllowed:
       # send car controls over can
-      can_sends = self.CI.apply(CC)
+      can_sends = self.CI.apply( CC, self.sm )
       self.pm.send('sendcan', can_list_to_can_capnp(can_sends, msgtype='sendcan', valid=CS.canValid))
+
 
     force_decel = (self.sm['dMonitoringState'].awarenessStatus < 0.) or \
                     (self.state == State.softDisabling)

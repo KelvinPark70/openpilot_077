@@ -471,6 +471,21 @@ EVENTS = {
       Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimePrompt, 1., 2., 3.),
   },
 
+  EventName.steerTorqueOver: {
+    ET.WARNING: Alert(
+      "운전자 핸들 조향",
+      "자동 조향 일시 중지",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimePrompt, 0, 0, .3),
+  },
+  
+  EventName.steerTorqueLow: {
+    ET.WARNING: Alert(
+      "TAKE CONTROL",
+      "자동 조향 일시 저하",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimePrompt, 0., 0., .1),
+  },  
   # ********** events that affect controls state transitions **********
 
   EventName.pcmEnable: {

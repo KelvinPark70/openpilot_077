@@ -1,4 +1,4 @@
-from cereal import car
+from cereal import car, log
 from common.realtime import DT_CTRL
 from selfdrive.car import apply_std_steer_torque_limits
 from selfdrive.car.hyundai.hyundaican import create_lkas11, create_clu11, create_lfa_mfa, create_mdps12
@@ -10,7 +10,7 @@ import common.log as trace1
 import common.CTime1000 as tm
 
 VisualAlert = car.CarControl.HUDControl.VisualAlert
-
+LaneChangeState = log.PathPlan.LaneChangeState
 
 
 
@@ -27,9 +27,13 @@ class CarController():
 
     # hud
     self.hud_timer_left = 0
-    self.hud_timer_right = 0    
+    self.hud_timer_right = 0
 
-    self.timer1 = tm.CTime1000("time")    
+    self.enable_time = 0
+    self.steer_torque_over_timer = 0
+    self.steer_torque_ratio =  1
+
+    self.timer1 = tm.CTime1000("time") 
 
   def limit_ctrl(self, value, limit, offset ):
       p_limit = offset + limit
@@ -64,7 +68,7 @@ class CarController():
     # initialize to no line visible
     sys_state = 1
     if self.hud_timer_left and self.hud_timer_right or sys_warning:  # HUD alert only display when LKAS status is active
-      if (self.steer_torque_ratio > 0.7) and (enabled or sys_warning):
+      if (self.steer_torque_ratio > 0.8) and (enabled or sys_warning):
         sys_state = 3
       else:
         sys_state = 4
@@ -75,16 +79,65 @@ class CarController():
 
     return sys_warning, sys_state
 
+  def steerParams_torque(self, CS, abs_angle_steers, path_plan, CC ):
+    param = SteerLimitParams()
+    v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
 
-  def update(self, c, CS, frame ):
+    self.enable_time = self.timer1.sampleTime()
+    if self.enable_time < 50:
+      self.steer_torque_over_timer = 0
+      self.steer_torque_ratio = 1
+      return param
+
+
+    sec_pval = 0.5  # 0.5 sec 운전자 => 오파 
+    sec_mval = 5.0  # 오파 => 운전자.
+    # streer over check
+    if path_plan.laneChangeState != LaneChangeState.off:
+      self.steer_torque_over_timer = 0
+      sec_mval = 15.0
+    elif CS.out.leftBlinker or CS.out.rightBlinker:
+      sec_mval = 2.0  # 오파 => 운전자.
+
+    if v_ego_kph > 5 and abs( CS.out.steeringTorque ) > 150:  #사용자 핸들 토크
+      self.steer_torque_over_timer = 50
+    elif self.steer_torque_over_timer:
+      self.steer_torque_over_timer -= 1
+
+    ratio_pval = 1/(100*sec_pval)
+    ratio_mval = 1/(100*sec_mval)
+
+    if self.steer_torque_over_timer:
+      self.steer_torque_ratio -= ratio_mval
+    else:
+      self.steer_torque_ratio += ratio_pval
+
+    if self.steer_torque_ratio < 0:
+      self.steer_torque_ratio = 0
+    elif self.steer_torque_ratio > 1:
+      self.steer_torque_ratio = 1      
+
+    return  param
+
+  def update(self, c, CS, frame, sm ):
     enabled = c.enabled
     actuators = c.actuators
     pcm_cancel_cmd = c.cruiseControl.cancel
+    abs_angle_steers =  abs(actuators.steerAngle)
+
+    path_plan = sm['pathPlan']    
 
     # Steering Torque
-    new_steer = actuators.steer * SteerLimitParams.STEER_MAX
-    apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorque, SteerLimitParams)
+    param = self.steerParams_torque( CS, abs_angle_steers, path_plan, CC ) 
+    new_steer = actuators.steer * param.STEER_MAX
+    apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorque, param)
     self.steer_rate_limited = new_steer != apply_steer
+
+
+    apply_steer_limit = param.STEER_MAX
+    if self.steer_torque_ratio < 1:
+      apply_steer_limit = int(self.steer_torque_ratio * param.STEER_MAX)
+      apply_steer = self.limit_ctrl( apply_steer, apply_steer_limit, 0 )
 
     # disable if steer angle reach 90 deg, otherwise mdps fault in some models
     lkas_active = enabled and abs(CS.out.steeringAngle) < 90.
