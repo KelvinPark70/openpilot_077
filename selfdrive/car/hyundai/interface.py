@@ -34,7 +34,7 @@ class CarInterface(CarInterfaceBase):
     ret.steerLimitTimer = 0.8
     tire_stiffness_factor = 1.
 
-    if candidate == CAR.GRANDEUR_H_19:
+    if candidate == CAR.GRANDEUR_HEV_19:
       tire_stiffness_factor = 0.6
       ret.lateralTuning.pid.kf = 0.000005      
       ret.mass = 1675. + STD_CARGO_KG
@@ -176,7 +176,7 @@ class CarInterface(CarInterfaceBase):
      
 
     # these cars require a special panda safety mode due to missing counters and checksums in the messages
-    if candidate in [CAR.HYUNDAI_GENESIS, CAR.IONIQ_EV_LTD, CAR.IONIQ, CAR.KONA_EV, CAR.GRANDEUR_H_19]:
+    if candidate in [CAR.HYUNDAI_GENESIS, CAR.IONIQ_EV_LTD, CAR.IONIQ, CAR.KONA_EV, CAR.GRANDEUR_HEV_19]:
       ret.safetyModel = car.CarParams.SafetyModel.hyundaiLegacy
 
     ret.centerToFront = ret.wheelbase * 0.4

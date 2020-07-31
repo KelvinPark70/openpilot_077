@@ -163,7 +163,7 @@ class CarController():
     can_sends.append(create_lkas11(self.packer, self.lkas11_cnt, self.car_fingerprint, apply_steer, steer_req,
                                    CS.lkas11, sys_warning, sys_state, c ))
 
-    if  self.car_fingerprint in [CAR.GRANDEUR_H_19]:
+    if  self.car_fingerprint in [CAR.GRANDEUR_HEV_19]:
       can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))                                   
 
 
@@ -194,7 +194,7 @@ class CarController():
         self.last_resume_frame = frame
 
     # 20 Hz LFA MFA message
-    if frame % 5 == 0 and self.car_fingerprint in [CAR.SONATA, CAR.PALISADE, CAR.IONIQ, CAR.GRANDEUR_H_19]:
+    if frame % 5 == 0 and self.car_fingerprint in [CAR.SONATA, CAR.PALISADE, CAR.IONIQ, CAR.GRANDEUR_HEV_19]:
       can_sends.append(create_lfa_mfa(self.packer, frame, enabled))
 
     return can_sends
