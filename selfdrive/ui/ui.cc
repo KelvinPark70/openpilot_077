@@ -424,9 +424,11 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.is_rhd = data.getIsRHD();
     s->preview_started = data.getIsPreview();
   }
+
+
   if ( sm.updated("liveParameters") )
   {
-    auto data = sm["liveParameters"].getLiveParametersData();
+    auto data = sm["liveParameters"].getLiveParameters();
 
     scene.live.gyroBias = data.getGyroBias();
     scene.live.angleOffset = data.getAngleOffset();
@@ -436,6 +438,7 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.live.yawRate = data.getYawRate();
     scene.live.posenetSpeed = data.getPosenetSpeed();
   }
+
 
   s->started = scene.thermal.getStarted() || s->preview_started;
   // Handle onroad/offroad transition
