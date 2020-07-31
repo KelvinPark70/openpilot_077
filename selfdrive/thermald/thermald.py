@@ -33,7 +33,7 @@ DISCONNECT_TIMEOUT = 5.  # wait 5 seconds before going offroad after disconnect 
 
 LEON = False
 last_eon_fan_val = None
-
+ts_power_on = None
 
 with open(BASEDIR + "/selfdrive/controls/lib/alerts_offroad.json") as json_file:
   OFFROAD_ALERTS = json.load(json_file)
@@ -148,6 +148,22 @@ def handle_fan_uno(max_cpu_temp, bat_temp, fan_speed, ignition):
 
   return new_speed
 
+def power_shutdown( msg, ts, off_ts, started_seen ):
+  shutdown = False
+  if msg.thermal.batteryStatus == "Discharging":
+    delta_ts = ts - ts_power_on
+
+    if (ts - off_ts) < 60:
+      pass
+    elif started_seen:
+      if msg.thermal.batteryPercent <= BATT_PERC_OFF and delta_ts > 5:
+        shutdown = True
+    elif delta_ts > 240 and msg.thermal.batteryPercent < 10:
+      shutdown = True
+  else:
+    ts_power_on = ts
+
+  return shutdown
 
 def thermald_thread():
   # prevent LEECO from undervoltage
@@ -198,6 +214,9 @@ def thermald_thread():
     location = messaging.recv_sock(location_sock)
     location = location.gpsLocation if location else None
     msg = read_thermal()
+
+    if  ts_power_on is None:
+      ts_power_on = ts
 
     if health is not None:
       usb_power = health.health.usbPowerMode != log.HealthData.UsbPowerMode.client
@@ -404,9 +423,12 @@ def thermald_thread():
 
       # shutdown if the battery gets lower than 3%, it's discharging, we aren't running for
       # more than a minute but we were running
-      if msg.thermal.batteryPercent < BATT_PERC_OFF and msg.thermal.batteryStatus == "Discharging" and \
-         started_seen and (sec_since_boot() - off_ts) > 60:
+      if power_shutdown( msg, ts, off_ts, should_start ):
         os.system('LD_LIBRARY_PATH="" svc power shutdown')
+
+      #if msg.thermal.batteryPercent < BATT_PERC_OFF and msg.thermal.batteryStatus == "Discharging" and \
+      #   started_seen and (sec_since_boot() - off_ts) > 60:
+      #  os.system('LD_LIBRARY_PATH="" svc power shutdown')
 
     # Offroad power monitoring
     pm.calculate(health)
