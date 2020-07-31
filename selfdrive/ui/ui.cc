@@ -178,9 +178,9 @@ static void ui_init(UIState *s) {
 
   pthread_mutex_init(&s->lock, NULL);
   s->sm = new SubMaster({"model", "controlsState", "uiLayoutState", "liveCalibration", "radarState", "thermal",
-                         "health", "ubloxGnss", "driverState", "dMonitoringState"
+                         "health", "ubloxGnss", "driverState", "dMonitoringState", "liveParameters"
 #ifdef SHOW_SPEEDLIMIT
-                                    , "liveMapData"
+                          , "liveMapData"
 #endif
   });
   s->pm = new PubMaster({"offroadLayout"});
@@ -297,6 +297,8 @@ void handle_message(UIState *s, SubMaster &sm) {
     s->controls_timeout = 1 * UI_FREQ;
     scene.frontview = scene.controls_state.getRearViewCam();
     if (!scene.frontview){ s->controls_seen = true; }
+
+    scene.v_ego = scene.controls_state.getVEgo();
 
     auto alert_sound = scene.controls_state.getAlertSound();
     if (scene.alert_type.compare(scene.controls_state.getAlertType()) != 0) {
@@ -421,6 +423,21 @@ void handle_message(UIState *s, SubMaster &sm) {
     auto data = sm["dMonitoringState"].getDMonitoringState();
     scene.is_rhd = data.getIsRHD();
     s->preview_started = data.getIsPreview();
+  }
+
+
+  if ( sm.updated("liveParameters") )
+  {
+    auto data = sm["liveParameters"].getLiveParametersData();
+
+    data.getGyroBias();
+    data.getAngleOffset();
+    data.getAngleOffsetAverage();
+    data.getStiffnessFactor();
+    data.getSteerRatio();
+    data.getYawRate();
+    data.getPosenetSpeed();
+  
   }
 
   s->started = scene.thermal.getStarted() || s->preview_started;
