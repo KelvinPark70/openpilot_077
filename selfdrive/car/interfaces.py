@@ -22,7 +22,8 @@ class CarInterfaceBase():
 
     self.frame = 0
     self.low_speed_alert = False
-    self.cruise_enabled_prev = False    
+    self.cruise_enabled_prev = False
+    self.timer_init = 100
 
     if CarState is not None:
       self.CS = CarState(CP)
@@ -88,19 +89,21 @@ class CarInterfaceBase():
   def create_common_events(self, cs_out, extra_gears=[], gas_resume_speed=-1, pcm_enable=True):  # pylint: disable=dangerous-default-value
     events = Events()
 
-    if cs_out.doorOpen:
+    if self.timer_init:
+      self.timer_init -= 1
+    elif cs_out.doorOpen:
       events.add(EventName.doorOpen)
-    if cs_out.seatbeltUnlatched:
+    elif cs_out.seatbeltUnlatched:
       events.add(EventName.seatbeltNotLatched)
-    if cs_out.gearShifter != GearShifter.drive and cs_out.gearShifter not in extra_gears:
+    elif cs_out.gearShifter != GearShifter.drive and cs_out.gearShifter not in extra_gears:
       events.add(EventName.wrongGear)
-    if cs_out.gearShifter == GearShifter.reverse:
+    elif cs_out.gearShifter == GearShifter.reverse:
       events.add(EventName.reverseGear)
-    if not cs_out.cruiseState.available:
+    elif not cs_out.cruiseState.available:
       events.add(EventName.wrongCarMode)
-    if cs_out.espDisabled:
+    elif cs_out.espDisabled:
       events.add(EventName.espDisabled)
-    if cs_out.gasPressed and self.CP.openpilotLongitudinalControl:
+    elif cs_out.gasPressed and self.CP.openpilotLongitudinalControl:
       events.add(EventName.gasPressed)
     if cs_out.stockFcw:
       events.add(EventName.stockFcw)
