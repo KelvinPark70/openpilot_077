@@ -794,9 +794,23 @@ static void ui_draw_vision_speedlimit(UIState *s) {
 static void ui_draw_debug(UIState *s) 
 {
   UIScene &scene = s->scene;
+  int ui_viz_rx = scene.ui_viz_rx;
 
   nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
   nvgFontSize(s->vg, 36*1.5*fFontSize);
+  
+
+  int nPos = 0;
+  int y_pos = 100; 
+  int x_pos = ui_viz_rx + 300;
+
+  ui_print( s, x_pos, y_pos+50*nPos++, "sR:%.2f", scene.live.steerRatio );
+  ui_print( s, x_pos, y_pos+50*nPos++, "aO:%.2f", scene.live.angleOffset );
+  ui_print( s, x_pos, y_pos+50*nPos++, "aA:%.2f", scene.live.angleOffsetAverage );
+  ui_print( s, x_pos, y_pos+50*nPos++, "sF:%.2f", scene.live.stiffnessFactor );
+  ui_print( s, x_pos, y_pos+50*nPos++, "yaw:%.2f", scene.live.yawRate );
+  ui_print( s, x_pos, y_pos+50*nPos++, "pS:%.2f", scene.live.posenetSpeed );
+  ui_print( s, x_pos, y_pos+50*nPos++, "gB:%.2f", scene.live.gyroBias );
   
 
   ui_print( s, 0, 1020, "%s", scene.alert.text1 );
