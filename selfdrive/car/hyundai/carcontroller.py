@@ -178,8 +178,8 @@ class CarController():
     #("ACTIVE", "LFAHDA_MFC", 0),
 
 
-    hda_usm = CS.lfahda["LFA_USM"]
-    hda_active = CS.lfahda["LFA_USM"]
+    hda_usm = CS.lfahda["HDA_USM"]
+    hda_active = CS.lfahda["ACTIVE"]
     str_log1 = 'hda={} active={}'.format( hda_usm, hda_active )
     trace1.printf2( '{}'.format( str_log1 ) )
 
