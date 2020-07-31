@@ -901,7 +901,7 @@ int main(int argc, char* argv[]) {
     } else if (s->started) {
       if (!s->controls_seen) {
         int  IsOpenpilotViewEnabled = 0;
-        ui_get_params( "IsDriverViewEnabled", &IsOpenpilotViewEnabled )
+        ui_get_params( "IsDriverViewEnabled", &IsOpenpilotViewEnabled );
         if( !IsOpenpilotViewEnabled )
         {
           // car is started, but controlsState hasn't been seen at all
