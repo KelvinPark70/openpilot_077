@@ -178,7 +178,7 @@ static void ui_init(UIState *s) {
 
   pthread_mutex_init(&s->lock, NULL);
   s->sm = new SubMaster({"model", "controlsState", "uiLayoutState", "liveCalibration", "radarState", "thermal",
-                         "health", "ubloxGnss", "driverState", "dMonitoringState"
+                         "health", "ubloxGnss", "driverState", "dMonitoringState", "liveParameters"
 #ifdef SHOW_SPEEDLIMIT
                           , "liveMapData"
 #endif
@@ -424,20 +424,19 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.is_rhd = data.getIsRHD();
     s->preview_started = data.getIsPreview();
   }
-
-/*
   if ( sm.updated("liveParameters") )
   {
     auto data = sm["liveParameters"].getLiveParametersData();
-    data.getGyroBias();
-    data.getAngleOffset();
-    data.getAngleOffsetAverage();
-    data.getStiffnessFactor();
-    data.getSteerRatio();
-    data.getYawRate();
-    data.getPosenetSpeed();
+
+    scene.live.gyroBias = data.getGyroBias();
+    scene.live.angleOffset = data.getAngleOffset();
+    scene.live.angleOffsetAverage = data.getAngleOffsetAverage();
+    scene.live.stiffnessFactor = data.getStiffnessFactor();
+    scene.live.steerRatio = data.getSteerRatio();
+    scene.live.yawRate = data.getYawRate();
+    scene.live.posenetSpeed = data.getPosenetSpeed();
   }
-*/
+
   s->started = scene.thermal.getStarted() || s->preview_started;
   // Handle onroad/offroad transition
   if (!s->started) {

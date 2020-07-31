@@ -147,12 +147,24 @@ typedef struct UIScene {
   int lead_status;
   float lead_d_rel, lead_y_rel, lead_v_rel;
 
+  struct _LIVE_PARAM
+  {
+    float gyroBias;
+    float angleOffset;
+    float angleOffsetAverage;
+    float stiffnessFactor;
+    float steerRatio;
+    float yawRate;
+    float posenetSpeed;
+  } live;
+
 
   struct _STATUS_
   {
       char text1[512];
       char text2[512];
   } alert;
+
 } UIScene;
 
 typedef struct {
