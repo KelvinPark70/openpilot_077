@@ -170,7 +170,7 @@ class PowerMonitoring:
 
 
   def charging_ctrl(self, msg, ts, to_discharge, to_charge ):
-    if self.ts_last_charging_ctrl is None or (ts - self.ts_last_charging_ctrl) >= 120.:
+    if self.ts_last_charging_ctrl is None or (ts - self.ts_last_charging_ctrl) >= 300.:
       battery_changing = get_battery_charging()
       if self.ts_last_charging_ctrl:
         if msg.thermal.batteryPercent >= to_discharge and battery_changing:
