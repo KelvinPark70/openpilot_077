@@ -909,6 +909,11 @@ int main(int argc, char* argv[]) {
           s->scene.alert_text2 = "Waiting for controls to start";
           s->scene.alert_size = cereal::ControlsState::AlertSize::MID;
         }
+        else
+        {
+          s->scene.alert_size = cereal::ControlsState::AlertSize::NONE;
+        }
+        
       } else {
         // car is started, but controls is lagging or died
         LOGE("Controls unresponsive");
