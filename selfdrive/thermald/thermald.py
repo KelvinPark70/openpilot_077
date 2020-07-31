@@ -171,7 +171,7 @@ def power_shutdown( msg, ts, off_ts, started_seen, batt_perc_off ):
 
 def thermald_thread():
   # prevent LEECO from undervoltage
-  BATT_PERC_OFF = 90 if LEON else 70
+  BATT_PERC_OFF = 95 if LEON else 90
 
   health_timeout = int(1000 * 2.5 * DT_TRML)  # 2.5x the expected health frequency
 
