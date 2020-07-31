@@ -148,7 +148,7 @@ def handle_fan_uno(max_cpu_temp, bat_temp, fan_speed, ignition):
 
   return new_speed
 
-def power_shutdown( msg, ts, off_ts, started_seen ):
+def power_shutdown( msg, ts, off_ts, started_seen, batt_perc_off ):
   global ts_power_on
   shutdown = False
 
@@ -158,12 +158,12 @@ def power_shutdown( msg, ts, off_ts, started_seen ):
   elif msg.thermal.batteryStatus == "Discharging":
     delta_ts = ts - ts_power_on
     if started_seen:
-      if msg.thermal.batteryPercent <= BATT_PERC_OFF and delta_ts > 5:
+      if msg.thermal.batteryPercent <= batt_perc_off and delta_ts > 5:
         shutdown = True
     elif delta_ts > 240 and msg.thermal.batteryPercent < 30:
       shutdown = True
 
-    print( 'power={} started_seen={} Percent={} BATT_PERC_OFF={}'.format( delta_ts, started_seen, msg.thermal.batteryPercent, BATT_PERC_OFF ) )
+    print( 'power={} started_seen={} Percent={} batt_perc_off={}'.format( delta_ts, started_seen, msg.thermal.batteryPercent, batt_perc_off ) )
   else:
     ts_power_on = ts
 
@@ -424,7 +424,7 @@ def thermald_thread():
 
       # shutdown if the battery gets lower than 3%, it's discharging, we aren't running for
       # more than a minute but we were running
-      if power_shutdown( msg, ts, off_ts, should_start ):
+      if power_shutdown( msg, ts, off_ts, should_start, BATT_PERC_OFF ):
         os.system('LD_LIBRARY_PATH="" svc power shutdown')
 
       #if msg.thermal.batteryPercent < BATT_PERC_OFF and msg.thermal.batteryStatus == "Discharging" and \
