@@ -900,10 +900,15 @@ int main(int argc, char* argv[]) {
       s->controls_timeout--;
     } else if (s->started) {
       if (!s->controls_seen) {
-        // car is started, but controlsState hasn't been seen at all
-        s->scene.alert_text1 = "openpilot Unavailable";
-        s->scene.alert_text2 = "Waiting for controls to start";
-        s->scene.alert_size = cereal::ControlsState::AlertSize::MID;
+        int  IsOpenpilotViewEnabled = 0;
+        ui_get_params( "IsDriverViewEnabled", &IsOpenpilotViewEnabled )
+        if( !IsOpenpilotViewEnabled )
+        {
+          // car is started, but controlsState hasn't been seen at all
+          s->scene.alert_text1 = "openpilot Unavailable";
+          s->scene.alert_text2 = "Waiting for controls to start";
+          s->scene.alert_size = cereal::ControlsState::AlertSize::MID;
+        }
       } else {
         // car is started, but controls is lagging or died
         LOGE("Controls unresponsive");
