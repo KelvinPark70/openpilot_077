@@ -154,11 +154,12 @@ class Controls:
 
     self.controlsAllowed = 0
     self.timer_alloowed = 1500
+    self.timer_start = 1500
 
   def auto_enable(self, CS):
-    if self.startup_event != None or self.hyundai_lkas:
+    if self.startup_event != None:
       self.timer_alloowed = 500
-    elif not self.controlsAllowed or CS.vEgo < 15*CV.KPH_TO_MS or CS.gearShifter != 2:
+    elif not self.controlsAllowed or self.hyundai_lkas or CS.vEgo < 15*CV.KPH_TO_MS or CS.gearShifter != 2:
       if self.timer_alloowed < 100:
         self.timer_alloowed = 100
     elif self.enabled != self.controlsAllowed and self.state != State.enabled:
@@ -180,6 +181,10 @@ class Controls:
     if self.startup_event is not None:
       self.events.add(self.startup_event)
       self.startup_event = None
+      self.timer_start = 500
+
+    if self.timer_start:
+      self.timer_start -= 1
 
     # Create events for battery, temperature, disk space, and memory
     if self.sm['thermal'].batteryPercent < 1 and self.sm['thermal'].chargingError:
@@ -195,7 +200,7 @@ class Controls:
 
     # Handle calibration status
     cal_status = self.sm['liveCalibration'].calStatus
-    if cal_status != Calibration.CALIBRATED:
+    if cal_status != Calibration.CALIBRATED and not self.timer_start:
       if cal_status == Calibration.UNCALIBRATED:
         self.events.add(EventName.calibrationIncomplete)
       else:
