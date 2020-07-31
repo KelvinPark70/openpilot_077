@@ -4,7 +4,7 @@ from selfdrive.car import apply_std_steer_torque_limits
 from selfdrive.car.hyundai.hyundaican import create_lkas11, create_clu11, create_lfa_mfa, create_mdps12
 from selfdrive.car.hyundai.values import Buttons, SteerLimitParams, CAR
 from opendbc.can.packer import CANPacker
-
+from selfdrive.config import Conversions as CV
 
 import common.log as trace1
 import common.CTime1000 as tm
