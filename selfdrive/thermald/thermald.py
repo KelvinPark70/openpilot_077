@@ -33,7 +33,7 @@ DISCONNECT_TIMEOUT = 5.  # wait 5 seconds before going offroad after disconnect 
 
 LEON = False
 last_eon_fan_val = None
-ts_power_on = 0
+
 
 with open(BASEDIR + "/selfdrive/controls/lib/alerts_offroad.json") as json_file:
   OFFROAD_ALERTS = json.load(json_file)
@@ -149,23 +149,18 @@ def handle_fan_uno(max_cpu_temp, bat_temp, fan_speed, ignition):
   return new_speed
 
 def power_shutdown( msg, ts, off_ts, started_seen, batt_perc_off ):
-  global ts_power_on
   shutdown = False
 
-  if (ts - off_ts) < 60:
-    if ts_power_on == 0:
-      ts_power_on = ts
-  elif msg.thermal.batteryStatus == "Discharging":
-    delta_ts = ts - ts_power_on
+  if msg.thermal.batteryStatus == "Discharging":
+    delta_ts = ts - off_ts
     if started_seen:
-      if msg.thermal.batteryPercent <= batt_perc_off and delta_ts > 5:
+      if msg.thermal.batteryPercent <= batt_perc_off and delta_ts > 10:
         shutdown = True
     elif delta_ts > 240 and msg.thermal.batteryPercent < 30:
       shutdown = True
 
     print( 'shutdown={} power={} started_seen={} Percent={} batt_perc_off={}'.format( shutdown, delta_ts, started_seen, msg.thermal.batteryPercent, batt_perc_off ) )
-  else:
-    ts_power_on = ts
+
 
   return shutdown
 
