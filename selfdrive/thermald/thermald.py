@@ -149,10 +149,11 @@ def handle_fan_uno(max_cpu_temp, bat_temp, fan_speed, ignition):
   return new_speed
 
 def power_shutdown( msg, ts, off_ts, started_seen ):
+  global ts_power_on
   shutdown = False
 
   if (ts - off_ts) < 60:
-    if not ts_power_on:
+    if ts_power_on == 0:
       ts_power_on = ts
   elif msg.thermal.batteryStatus == "Discharging":
     delta_ts = ts - ts_power_on
