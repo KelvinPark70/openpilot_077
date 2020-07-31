@@ -9,8 +9,8 @@ class CarInterface(CarInterfaceBase):
   def __init__(self, CP, CarController, CarState):
     super().__init__(CP, CarController, CarState )
 
-    self.meg_timer = 0
-    self.meg_name = 0
+    self.msg_timer = 0
+    self.msg_name = 0
 
     
   @staticmethod
@@ -220,31 +220,31 @@ class CarInterface(CarInterfaceBase):
       self.low_speed_alert = False
 
 
-    meg_name = None
+    msg_name = None
     if not self.cruise_enabled_prev:
-      self.meg_timer = 0
-    elif self.meg_timer:
-      self.meg_timer -= 1      
+      self.msg_timer = 0
+    elif self.msg_timer:
+      self.msg_timer -= 1      
     elif not self.CS.lkas_button_on:
-      meg_name = car.CarEvent.EventName.invalidLkasSetting
+      msg_name = car.CarEvent.EventName.invalidLkasSetting
     elif ret.cruiseState.standstill:
-      meg_name = car.CarEvent.EventName.resumeRequired
+      msg_name = car.CarEvent.EventName.resumeRequired
     elif self.CC.steer_torque_ratio < 0.1:
-      self.meg_name = car.CarEvent.EventName.steerTorqueOver
+      self.msg_name = car.CarEvent.EventName.steerTorqueOver
     elif self.CC.steer_torque_ratio < 0.5:
-      self.meg_name = car.CarEvent.EventName.steerTorqueLow      
+      self.msg_name = car.CarEvent.EventName.steerTorqueLow      
     elif self.low_speed_alert:
-      meg_name = car.CarEvent.EventName.belowSteerSpeed
+      msg_name = car.CarEvent.EventName.belowSteerSpeed
     else:
-      self.meg_name =  None
+      self.msg_name =  None
 
 
-    if meg_name != None:
-      self.meg_timer = 100
-      self.meg_name = meg_name
+    if msg_name != None:
+      self.msg_timer = 100
+      self.msg_name = msg_name
 
-    if self.meg_timer and self.meg_name != None:
-      events.add( self.meg_name )
+    if self.msg_timer and self.msg_name != None:
+      events.add( self.msg_name )
 
     ret.events = events.to_msg()
 
