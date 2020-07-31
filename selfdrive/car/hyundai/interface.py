@@ -231,7 +231,7 @@ class CarInterface(CarInterfaceBase):
       msg_name = car.CarEvent.EventName.resumeRequired
     elif self.CC.steer_torque_ratio < 0.1:
       self.msg_name = car.CarEvent.EventName.steerTorqueOver
-    elif self.CC.steer_torque_ratio < 0.5:
+    elif self.CC.steer_torque_ratio < 0.8:
       self.msg_name = car.CarEvent.EventName.steerTorqueLow      
     elif self.low_speed_alert:
       msg_name = car.CarEvent.EventName.belowSteerSpeed

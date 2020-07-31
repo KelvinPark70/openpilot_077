@@ -168,7 +168,7 @@ class CarController():
 
 
     str_log1 = 'torg:{:3.0f}'.format( apply_steer )
-    str_log2 = 'new_steer={:.0f} tm={:.1f} '.format( new_steer, self.timer1.sampleTime()  )
+    str_log2 = 'new={:.0f} max={:.0f} tm={:.1f} '.format( new_steer,  apply_steer_limit, self.timer1.sampleTime()  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
     #("LFA_USM", "LFAHDA_MFC", 0),
