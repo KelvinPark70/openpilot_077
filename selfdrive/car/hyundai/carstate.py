@@ -116,6 +116,7 @@ class CarState(CarStateBase):
     ret.leftBlindspot, ret.rightBlindspot = self.get_BSM(cp)
 
     # save the entire LKAS11 and CLU11
+    self.lfahda = cp.vl["LFAHDA_MFC"]
     self.lkas11 = cp_cam.vl["LKAS11"]
     self.clu11 = cp.vl["CLU11"]
     self.mdps12 = cp.vl["MDPS12"]
@@ -366,8 +367,8 @@ class CarState(CarStateBase):
       #("LFA_USM", "LFAHDA_MFC", 0),
       #("LFA_SysWarning", "LFAHDA_MFC", 0),
       #("ACTIVE2", "LFAHDA_MFC", 0),
-      #("HDA_USM", "LFAHDA_MFC", 0),
-      #("ACTIVE", "LFAHDA_MFC", 0),
+      ("HDA_USM", "LFAHDA_MFC", 0),
+      ("ACTIVE", "LFAHDA_MFC", 0),
     ]
 
     checks = [

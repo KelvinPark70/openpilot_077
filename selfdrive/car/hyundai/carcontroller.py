@@ -167,12 +167,22 @@ class CarController():
       can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))                                   
 
 
-
     str_log1 = 'torg:{:3.0f}'.format( apply_steer )
     str_log2 = 'new_steer={:.0f} tm={:.1f} '.format( new_steer, self.timer1.sampleTime()  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
-    #print( 'st={} cmd={} long={}  steer={} req={}'.format(CS.out.cruiseState.standstill, pcm_cancel_cmd, self.CP.openpilotLongitudinalControl, apply_steer, steer_req ) )
+    #("LFA_USM", "LFAHDA_MFC", 0),
+    #("LFA_SysWarning", "LFAHDA_MFC", 0),
+    #("ACTIVE2", "LFAHDA_MFC", 0),
+    #("HDA_USM", "LFAHDA_MFC", 0),
+    #("ACTIVE", "LFAHDA_MFC", 0),
+
+
+    hda_usm = CS.lfahda["LFA_USM"]
+    hda_active = CS.lfahda["LFA_USM"]
+    str_log1 = 'hda={} active={}'.format( hda_usm, hda_active )
+    trace1.printf2( '{}'.format( str_log1 ) )
+
 
     if pcm_cancel_cmd and self.CP.openpilotLongitudinalControl:
       can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.CANCEL))
