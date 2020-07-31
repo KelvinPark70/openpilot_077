@@ -328,7 +328,7 @@ def thermald_thread():
     time_valid_prev = time_valid
 
     # Show update prompt
-    """
+
     try:
       last_update = datetime.datetime.fromisoformat(params.get("LastUpdateTime", encoding='utf8'))
     except (TypeError, ValueError):
@@ -355,7 +355,7 @@ def thermald_thread():
       current_connectivity_alert = None
       params.delete("Offroad_ConnectivityNeeded")
       params.delete("Offroad_ConnectivityNeededPrompt")
-    """
+
 
     do_uninstall = params.get("DoUninstall") == b"1"
     accepted_terms = params.get("HasAcceptedTerms") == terms_version
