@@ -160,10 +160,10 @@ def power_shutdown( msg, ts, off_ts, started_seen ):
     if started_seen:
       if msg.thermal.batteryPercent <= BATT_PERC_OFF and delta_ts > 5:
         shutdown = True
-    elif delta_ts > 240 and msg.thermal.batteryPercent < 10:
+    elif delta_ts > 240 and msg.thermal.batteryPercent < 30:
       shutdown = True
 
-    print( 'power ={} started_seen={} batteryPercent={}'.format( delta_ts, started_seen, msg.thermal.batteryPercent ) )
+    print( 'power={} started_seen={} Percent={} BATT_PERC_OFF={}'.format( delta_ts, started_seen, msg.thermal.batteryPercent, BATT_PERC_OFF ) )
   else:
     ts_power_on = ts
 
