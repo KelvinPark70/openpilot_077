@@ -178,7 +178,7 @@ static void ui_init(UIState *s) {
 
   pthread_mutex_init(&s->lock, NULL);
   s->sm = new SubMaster({"model", "controlsState", "uiLayoutState", "liveCalibration", "radarState", "thermal",
-                         "health", "ubloxGnss", "driverState", "dMonitoringState", "liveParameters"
+                         "health", "ubloxGnss", "driverState", "dMonitoringState"
 #ifdef SHOW_SPEEDLIMIT
                           , "liveMapData"
 #endif
@@ -425,11 +425,10 @@ void handle_message(UIState *s, SubMaster &sm) {
     s->preview_started = data.getIsPreview();
   }
 
-
+/*
   if ( sm.updated("liveParameters") )
   {
     auto data = sm["liveParameters"].getLiveParametersData();
-
     data.getGyroBias();
     data.getAngleOffset();
     data.getAngleOffsetAverage();
@@ -437,9 +436,8 @@ void handle_message(UIState *s, SubMaster &sm) {
     data.getSteerRatio();
     data.getYawRate();
     data.getPosenetSpeed();
-  
   }
-
+*/
   s->started = scene.thermal.getStarted() || s->preview_started;
   // Handle onroad/offroad transition
   if (!s->started) {
