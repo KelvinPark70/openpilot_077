@@ -162,7 +162,7 @@ class Controls:
     elif not self.controlsAllowed or self.hyundai_lkas or CS.vEgo < 15*CV.KPH_TO_MS or CS.gearShifter != 2:
       if self.timer_alloowed < 100:
         self.timer_alloowed = 100
-    elif self.enabled != self.controlsAllowed and self.state != State.enabled:
+    elif self.state != State.enabled:
       if self.timer_alloowed:
         self.timer_alloowed -= 1
       else:

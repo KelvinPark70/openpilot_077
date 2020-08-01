@@ -167,21 +167,19 @@ class CarController():
       can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))                                   
 
 
-    str_log1 = 'torg:{:3.0f}'.format( apply_steer )
-    str_log2 = 'new={:.0f} max={:.0f} tm={:.1f} '.format( new_steer,  apply_steer_limit, self.timer1.sampleTime()  )
+    str_log1 = 'torg:{:3.0f}/{:3.0f}'.format( apply_steer, new_steer )
+    str_log2 = 'max={:.0f} tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
-    #("LFA_USM", "LFAHDA_MFC", 0),
-    #("LFA_SysWarning", "LFAHDA_MFC", 0),
-    #("ACTIVE2", "LFAHDA_MFC", 0),
-    #("HDA_USM", "LFAHDA_MFC", 0),
-    #("ACTIVE", "LFAHDA_MFC", 0),
-
+    lfa_usm = CS.lfahda["LFA_USM"]
+    lfa_warn= CS.lfahda["LFA_SysWarning"]
+    lfa_active = CS.lfahda["ACTIVE2"]
 
     hda_usm = CS.lfahda["HDA_USM"]
     hda_active = CS.lfahda["ACTIVE"]
-    str_log1 = 'hda={} active={}'.format( hda_usm, hda_active )
-    trace1.printf2( '{}'.format( str_log1 ) )
+    str_log1 = 'hda={:0.f},{:0.f}'.format( hda_usm, hda_active )
+    str_log2 = 'lfa={:0.f},{:0.f},{:0.f}'.format( lfa_usm, lfa_warn, lfa_active  )
+    trace1.printf2( '{} {}'.format( str_log1, str_log2 ) )
 
 
     if pcm_cancel_cmd and self.CP.openpilotLongitudinalControl:
@@ -194,7 +192,7 @@ class CarController():
         self.last_resume_frame = frame
 
     # 20 Hz LFA MFA message
-    if frame % 5 == 0 and self.car_fingerprint in [CAR.SONATA, CAR.PALISADE, CAR.IONIQ, CAR.GRANDEUR_HEV_19]:
+    if frame % 5 == 0 and self.car_fingerprint in [CAR.SONATA, CAR.PALISADE, CAR.IONIQ, CAR.GRANDEUR_HEV_19, CAR.GRANDEUR_HEV_19]:
       can_sends.append(create_lfa_mfa(self.packer, frame, enabled))
 
     return can_sends

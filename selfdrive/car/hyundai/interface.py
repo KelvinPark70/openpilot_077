@@ -12,7 +12,7 @@ class CarInterface(CarInterfaceBase):
     self.msg_timer = 0
     self.msg_name = 0
 
-    
+
   @staticmethod
   def compute_gb(accel, speed):
     return float(accel) / 3.0
@@ -41,7 +41,7 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.845
       ret.steerRatio = 13.7  #12.5
       ret.steerMaxBP = [0.] 
-      ret.steerMaxV = [1.3]
+      ret.steerMaxV = [1.0]
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
 
