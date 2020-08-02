@@ -818,6 +818,43 @@ static void ui_draw_debug(UIState *s)
 
 }
 
+
+/*
+  park @1;
+  drive @2;
+  neutral @3;
+  reverse @4;
+  sport @5;
+  low @6;
+  brake @7;
+  eco @8;
+*/
+static void ui_draw_gear( UIState *s )
+{
+  UIScene &scene = s->scene;  
+  NVGcolor nColor = COLOR_WHITE;
+
+  int  ngetGearShifter = int(scene.getGearShifter);
+  int  x_pos = 1700;
+  int  y_pos = 200;
+  char str_msg[512];
+
+  nvgFontSize(s->vg, 150 );
+  switch( ngetGearShifter )
+  {
+    case 1 : strcpy( str_msg, "P" ); nColor = nvgRGBA(200, 200, 255, 255); break;
+    case 2 : strcpy( str_msg, "D" ); nColor = nvgRGBA(200, 200, 255, 255); break;
+    case 3 : strcpy( str_msg, "N" ); nColor = COLOR_WHITE; break;
+    case 4 : strcpy( str_msg, "R" ); nColor = COLOR_RED; break;
+    case 7 : strcpy( str_msg, "B" ); break;
+    default: sprintf( str_msg, "%d", ngetGearShifter ); break;
+  }
+
+  nvgFillColor(s->vg, nColor);
+  ui_print( s, x_pos, y_pos, str_msg );
+}
+
+
 static void ui_draw_vision_speed(UIState *s) {
   const UIScene *scene = &s->scene;
   float v_ego = s->scene.controls_state.getVEgo();
@@ -828,14 +865,18 @@ static void ui_draw_vision_speed(UIState *s) {
   const int viz_speed_w = 280;
   const int viz_speed_x = scene->ui_viz_rx+((scene->ui_viz_rw/2)-(viz_speed_w/2));
   char speed_str[32];
+  NVGcolor val_color = COLOR_WHITE;
+
+  if( scene->brakePress  ) val_color = COLOR_RED;
+  else if( scene->brakeLights ) val_color = nvgRGBA(201, 34, 49, 100);
 
   nvgBeginPath(s->vg);
   nvgRect(s->vg, viz_speed_x, box_y, viz_speed_w, header_h);
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
 
   snprintf(speed_str, sizeof(speed_str), "%d", (int)speed);
-  ui_draw_text(s->vg, viz_speed_x + viz_speed_w / 2, 240, speed_str, 96*2.5, COLOR_WHITE, s->font_sans_bold);
-  ui_draw_text(s->vg, viz_speed_x + viz_speed_w / 2, 320, s->is_metric?"kph":"mph", 36*2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);
+  ui_draw_text(s->vg, viz_speed_x + viz_speed_w / 2, 240, speed_str, 96*2.5, val_color, s->font_sans_bold);
+  ui_draw_text(s->vg, viz_speed_x + viz_speed_w / 2, 320, s->is_metric?"km/h":"mph", 36*2.5, COLOR_WHITE_ALPHA(200), s->font_sans_regular);
 
   ui_draw_debug( s );  
 }
@@ -866,6 +907,10 @@ static void ui_draw_vision_event(UIState *s) {
     {
       float angleSteers = s->scene.controls_state.getAngleSteers();
       ui_draw_circle_image(s->vg, bg_wheel_x, bg_wheel_y, bg_wheel_size, s->img_wheel, color, 1.0f, angleSteers );// bg_wheel_y - 25);
+    }
+    else  
+    {
+      ui_draw_gear( s );
     }
   }
 }

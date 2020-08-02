@@ -224,15 +224,18 @@ class Controls:
     #print( 'can rcv error ={}, canvalid={} frame={} '.format( self.can_rcv_error,  CS.canValid, self.sm.frame ) )
     if self.can_rcv_error or (not CS.canValid and self.sm.frame > 5 / DT_CTRL):
       self.events.add(EventName.canError)
-    if self.mismatch_counter >= 200:
+    elif self.timer_start:
+      pass
+    elif self.mismatch_counter >= 200:
       self.events.add(EventName.controlsMismatch)
-    if not self.sm.alive['plan'] and self.sm.alive['pathPlan']:
+    elif not self.sm.alive['plan'] and self.sm.alive['pathPlan']:
       # only plan not being received: radar not communicating
       self.events.add(EventName.radarCommIssue)
-    elif not self.timer_start and not self.sm.all_alive_and_valid():
+    elif not self.sm.all_alive_and_valid():
       self.events.add(EventName.commIssue)
-    if not self.sm['pathPlan'].mpcSolutionValid:
+    elif not self.sm['pathPlan'].mpcSolutionValid:
       self.events.add(EventName.plannerError)
+
     if not self.sm['liveLocationKalman'].sensorsOK and os.getenv("NOSENSOR") is None:
       if self.sm.frame > 5 / DT_CTRL:  # Give locationd some time to receive all the inputs
         self.events.add(EventName.sensorDataInvalid)

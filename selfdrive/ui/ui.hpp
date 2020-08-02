@@ -147,6 +147,15 @@ typedef struct UIScene {
   int lead_status;
   float lead_d_rel, lead_y_rel, lead_v_rel;
 
+  bool  brakePress;
+  bool  brakeLights;
+  bool  leftBlinker;
+  bool  rightBlinker;
+
+
+
+  cereal::CarState::GearShifter  getGearShifter;  
+
   struct _LIVE_PARAM
   {
     float gyroBias;

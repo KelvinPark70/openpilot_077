@@ -171,8 +171,8 @@ class CarController():
       can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))                                   
 
 
-    str_log1 = 'torg:{:>3.0f}/{:>3.0f}'.format( apply_steer, new_steer )
-    str_log2 = 'max={:>3.0f} tm={:>5.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
+    str_log1 = 'torg:{:>4.0f}/{:>4.0f}'.format( apply_steer, new_steer )
+    str_log2 = 'max={:>4.0f} tm={:>5.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
     lfa_usm = CS.lfahda["LFA_USM"]
@@ -205,13 +205,6 @@ class CarController():
     elif self.last_lead_distance != 0:
       self.last_lead_distance = 0
 
-
-    #elif CS.out.cruiseState.standstill:
-    #  # SCC won't resume anyway when the lead distace is less than 3.7m
-    #  # send resume at a max freq of 5Hz
-    #  if CS.lead_distance > 3.7 and (frame - self.last_resume_frame)*DT_CTRL > 0.2:
-    #    can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.RES_ACCEL))
-    #    self.last_resume_frame = frame
 
 
     # 20 Hz LFA MFA message

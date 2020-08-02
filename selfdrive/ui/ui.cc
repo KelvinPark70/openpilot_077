@@ -177,7 +177,7 @@ static int write_param_float(float param, const char* param_name, bool persisten
 static void ui_init(UIState *s) {
 
   pthread_mutex_init(&s->lock, NULL);
-  s->sm = new SubMaster({"model", "controlsState", "uiLayoutState", "liveCalibration", "radarState", "thermal",
+  s->sm = new SubMaster({"model", "controlsState", "carState", "uiLayoutState", "liveCalibration", "radarState", "thermal",
                          "health", "ubloxGnss", "driverState", "dMonitoringState", "liveParameters"
 #ifdef SHOW_SPEEDLIMIT
                           , "liveMapData"
@@ -424,8 +424,15 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.is_rhd = data.getIsRHD();
     s->preview_started = data.getIsPreview();
   }
+  if (sm.updated("carState")) {
+    auto data = sm["carState"].getCarState();
+    scene.brakePress = data.getBrakePressed();
+    scene.brakeLights = data.getBrakeLights();
 
-
+    scene.leftBlinker = data.getLeftBlinker();
+    scene.rightBlinker = data.getRightBlinker();
+    scene.getGearShifter = data.getGearShifter();
+  }
   if ( sm.updated("liveParameters") )
   {
     auto data = sm["liveParameters"].getLiveParameters();
