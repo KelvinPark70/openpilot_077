@@ -181,8 +181,8 @@ class CarController():
 
     hda_usm = CS.lfahda["HDA_USM"]
     hda_active = CS.lfahda["ACTIVE"]
-    str_log1 = 'hda={:0.f},{:0.f}'.format( hda_usm, hda_active )
-    str_log2 = 'lfa={:0.f},{:0.f},{:0.f}'.format( lfa_usm, lfa_warn, lfa_active  )
+    str_log1 = 'hda={:.0f},{:.0f}'.format( hda_usm, hda_active )
+    str_log2 = 'lfa={:.0f},{:.0f},{:.0f}'.format( lfa_usm, lfa_warn, lfa_active  )
     trace1.printf2( '{} {}'.format( str_log1, str_log2 ) )
 
 
