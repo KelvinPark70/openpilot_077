@@ -37,7 +37,7 @@ class CarInterface(CarInterfaceBase):
     if candidate == CAR.GRANDEUR_HEV_19:
       ret.mass = 1675. + STD_CARGO_KG
       ret.wheelbase = 2.845
-      ret.steerRatio = 13.9  #12.5
+      ret.steerRatio = 14.2  #12.5
       ret.steerMaxBP = [0.] 
       ret.steerMaxV = [1.0]
       ret.lateralTuning.pid.kf = 0.000005
