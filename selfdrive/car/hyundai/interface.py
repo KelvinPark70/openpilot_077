@@ -35,13 +35,12 @@ class CarInterface(CarInterfaceBase):
     tire_stiffness_factor = 1.
 
     if candidate == CAR.GRANDEUR_HEV_19:
-      tire_stiffness_factor = 0.6
-      ret.lateralTuning.pid.kf = 0.000005      
       ret.mass = 1675. + STD_CARGO_KG
       ret.wheelbase = 2.845
       ret.steerRatio = 13.7  #12.5
       ret.steerMaxBP = [0.] 
       ret.steerMaxV = [1.0]
+      ret.lateralTuning.pid.kf = 0.000005         
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
 
@@ -55,7 +54,14 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.lqr.k = [-100., 450.]
       ret.lateralTuning.lqr.l = [0.22, 0.318]
       ret.lateralTuning.lqr.dcGain = 0.003
-
+    elif candidate == CAR.GRANDEUR_HEV_20:
+      ret.lateralTuning.pid.kf = 0.00005
+      ret.mass = 1725. + STD_CARGO_KG
+      ret.wheelbase = 2.885
+      ret.steerRatio = 13.27 * 1.15   # 15% higher at the center seems reasonable
+      tire_stiffness_factor = 0.65
+      ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
+      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]] 
     elif candidate == CAR.SANTA_FE:
       ret.lateralTuning.pid.kf = 0.00005
       ret.mass = 3982. * CV.LB_TO_KG + STD_CARGO_KG
