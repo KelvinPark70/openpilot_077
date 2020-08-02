@@ -103,11 +103,10 @@ class CarController():
       return param
 
     sec_pval = 0.5  # 0.5 sec 운전자 => 오파  (sec)
-    sec_mval = 5.0  # 오파 => 운전자.  (sec)
+    sec_mval = 7.0  # 오파 => 운전자.  (sec)
     # streer over check
     if path_plan.laneChangeState != LaneChangeState.off:
       self.steer_torque_over_timer = 0
-      sec_mval = 15.0
     elif CS.out.leftBlinker or CS.out.rightBlinker:
       sec_mval = 2.0  # 오파 => 운전자.
 
