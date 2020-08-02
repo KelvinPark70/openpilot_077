@@ -6,6 +6,11 @@ from selfdrive.car.hyundai.values import Buttons, SteerLimitParams, CAR
 from opendbc.can.packer import CANPacker
 from selfdrive.config import Conversions as CV
 
+# speed controller
+from selfdrive.car.hyundai.spdcontroller  import SpdController
+from selfdrive.car.hyundai.spdctrlSlow  import SpdctrlSlow
+from selfdrive.car.hyundai.spdctrlNormal  import SpdctrlNormal
+
 import common.log as trace1
 import common.CTime1000 as tm
 
@@ -38,6 +43,10 @@ class CarController():
     self.steer_torque_ratio =  1
 
     self.timer1 = tm.CTime1000("time") 
+
+    self.SC = SpdctrlSlow()
+    self.model_speed = 0
+    self.model_sum = 0    
 
   def limit_ctrl(self, value, limit, offset ):
       p_limit = offset + limit
@@ -128,7 +137,9 @@ class CarController():
     pcm_cancel_cmd = c.cruiseControl.cancel
     abs_angle_steers =  abs(actuators.steerAngle)
 
-    path_plan = sm['pathPlan']    
+    path_plan = sm['pathPlan']
+
+    self.model_speed, self.model_sum = self.SC.calc_va( sm, CS.out.vEgo  )
 
     # Steering Torque
     param = self.steerParams_torque( CS, abs_angle_steers, path_plan ) 
@@ -171,7 +182,7 @@ class CarController():
       can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))                                   
 
 
-    str_log1 = 'torg:{:>4.0f}/{:>4.0f}'.format( apply_steer, new_steer )
+    str_log1 = 'CV={:>3.0f} torg:{:>4.0f}/{:>4.0f}'.format( self.model_speed, apply_steer, new_steer )
     str_log2 = 'max={:>4.0f} tm={:>5.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
