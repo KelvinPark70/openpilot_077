@@ -178,7 +178,7 @@ static void ui_init(UIState *s) {
 
   pthread_mutex_init(&s->lock, NULL);
   s->sm = new SubMaster({"model", "controlsState", "carState", "uiLayoutState", "liveCalibration", "radarState", "thermal",
-                         "health", "ubloxGnss", "driverState", "dMonitoringState", "liveParameters"
+                         "health", "ubloxGnss", "driverState", "dMonitoringState", "liveParameters", "frame"
 #ifdef SHOW_SPEEDLIMIT
                           , "liveMapData"
 #endif
