@@ -167,7 +167,7 @@ typedef struct UIScene {
     float posenetSpeed;
   } live;
 
-  struct _LIVE_PARAM
+  struct _FRAME_PARAM
   {
     int frame_id;
     int timestamp_eof;
