@@ -167,6 +167,20 @@ typedef struct UIScene {
     float posenetSpeed;
   } live;
 
+  struct _LIVE_PARAM
+  {
+    int frame_id;
+    int timestamp_eof;
+    int frame_length;
+    int integ_lines;
+    int global_gain;
+    int lensPos;
+
+    float  dlensSag;
+    float  dlensErr;
+    float  dlensTruePos;
+  } fame;
+
 
   struct _STATUS_
   {

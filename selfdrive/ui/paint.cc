@@ -805,12 +805,25 @@ static void ui_draw_debug(UIState *s)
   int x_pos = ui_viz_rx + 300;
 
   ui_print( s, x_pos, y_pos+50*nPos++, "sR:%.2f", scene.live.steerRatio );
+/*
   ui_print( s, x_pos, y_pos+50*nPos++, "aO:%.2f", scene.live.angleOffset );
   ui_print( s, x_pos, y_pos+50*nPos++, "aA:%.2f", scene.live.angleOffsetAverage );
   ui_print( s, x_pos, y_pos+50*nPos++, "sF:%.2f", scene.live.stiffnessFactor );
   ui_print( s, x_pos, y_pos+50*nPos++, "yaw:%.2f", scene.live.yawRate );
   ui_print( s, x_pos, y_pos+50*nPos++, "pS:%.2f", scene.live.posenetSpeed );
   ui_print( s, x_pos, y_pos+50*nPos++, "gB:%.2f", scene.live.gyroBias );
+*/
+
+  ui_print( s, x_pos, y_pos+50*nPos++, "ID:%d", scene.fame.frame_id );
+  ui_print( s, x_pos, y_pos+50*nPos++, "tS:%d", scene.fame.timestamp_eof );
+  ui_print( s, x_pos, y_pos+50*nPos++, "fL:%d", scene.fame.frame_length );
+  ui_print( s, x_pos, y_pos+50*nPos++, "iL:%d", scene.fame.integ_lines );
+  ui_print( s, x_pos, y_pos+50*nPos++, "gG:%d", scene.fame.global_gain );
+  ui_print( s, x_pos, y_pos+50*nPos++, "lP:%d", scene.fame.lensPos );
+  ui_print( s, x_pos, y_pos+50*nPos++, "lS:%.2f", scene.fame.dlensSag );
+  ui_print( s, x_pos, y_pos+50*nPos++, "lE:%.2f", scene.fame.dlensErr );
+  ui_print( s, x_pos, y_pos+50*nPos++, "lT:%.2f", scene.fame.dlensTruePos );
+    
   
 
   ui_print( s, 0, 1020, "%s", scene.alert.text1 );

@@ -446,6 +446,22 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.live.posenetSpeed = data.getPosenetSpeed();
   }
 
+  if ( sm.updated("frame") )
+  {
+    auto data = sm["frame"].getFrame();
+
+
+    scene.fame.frame_id = frame.getFrameId();
+    scene.fame.timestamp_eof = frame.getTimestampEof();
+    scene.fame.frame_length = static_cast<unsigned>(frame.getFrameLength());
+    scene.fame.integ_lines = static_cast<unsigned>(frame.getIntegLines());
+    scene.fame.global_gain = static_cast<unsigned>(frame.getGlobalGain());
+    scene.fame.lensPos = frame.getLensPos();
+    scene.fame.dlensSag = frame.getLensSag();
+    scene.fame.dlensErr = frame.getLensErr();
+    scene.fame.dlensTruePos = frame.getLensTruePos();
+  }  
+
 
   s->started = scene.thermal.getStarted() || s->preview_started;
   // Handle onroad/offroad transition
