@@ -815,8 +815,8 @@ static void ui_draw_debug(UIState *s)
 */
 
   ui_print( s, x_pos, y_pos+50*nPos++, "ID:%d", scene.fame.frame_id );
-  ui_print( s, x_pos, y_pos+50*nPos++, "tS:%d", scene.fame.timestamp_eof );
-  ui_print( s, x_pos, y_pos+50*nPos++, "fL:%d", scene.fame.frame_length );
+ // ui_print( s, x_pos, y_pos+50*nPos++, "tS:%d", scene.fame.timestamp_eof );
+ // ui_print( s, x_pos, y_pos+50*nPos++, "fL:%d", scene.fame.frame_length );
   ui_print( s, x_pos, y_pos+50*nPos++, "iL:%d", scene.fame.integ_lines );
   ui_print( s, x_pos, y_pos+50*nPos++, "gG:%d", scene.fame.global_gain );
   ui_print( s, x_pos, y_pos+50*nPos++, "lP:%d", scene.fame.lensPos );
