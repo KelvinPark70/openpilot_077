@@ -451,15 +451,15 @@ void handle_message(UIState *s, SubMaster &sm) {
     auto data = sm["frame"].getFrame();
 
 
-    scene.fame.frame_id = frame.getFrameId();
-    scene.fame.timestamp_eof = frame.getTimestampEof();
-    scene.fame.frame_length = static_cast<unsigned>(frame.getFrameLength());
-    scene.fame.integ_lines = static_cast<unsigned>(frame.getIntegLines());
-    scene.fame.global_gain = static_cast<unsigned>(frame.getGlobalGain());
-    scene.fame.lensPos = frame.getLensPos();
-    scene.fame.dlensSag = frame.getLensSag();
-    scene.fame.dlensErr = frame.getLensErr();
-    scene.fame.dlensTruePos = frame.getLensTruePos();
+    scene.fame.frame_id = data.getFrameId();
+    scene.fame.timestamp_eof = data.getTimestampEof();
+    scene.fame.frame_length = static_cast<unsigned>(data.getFrameLength());
+    scene.fame.integ_lines = static_cast<unsigned>(data.getIntegLines());
+    scene.fame.global_gain = static_cast<unsigned>(data.getGlobalGain());
+    scene.fame.lensPos = data.getLensPos();
+    scene.fame.dlensSag = data.getLensSag();
+    scene.fame.dlensErr = data.getLensErr();
+    scene.fame.dlensTruePos = data.getLensTruePos();
   }  
 
 
