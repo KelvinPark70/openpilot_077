@@ -188,6 +188,12 @@ typedef struct UIScene {
       char text2[512];
   } alert;
 
+  struct _KEGMEN_
+  {
+      bool steerOverride;
+      float output_scale;
+  } kegman;
+
 } UIScene;
 
 typedef struct {
