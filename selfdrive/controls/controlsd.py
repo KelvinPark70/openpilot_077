@@ -249,9 +249,9 @@ class Controls:
     if not self.sm['frame'].recoverState < 2:
       # counter>=2 is active
       self.events.add(EventName.focusRecoverActive)
-    if not self.sm['plan'].radarValid:
+    if not self.timer_start and not self.sm['plan'].radarValid:
       self.events.add(EventName.radarFault)
-    if self.sm['plan'].radarCanError:
+    if not self.timer_start and self.sm['plan'].radarCanError:
       self.events.add(EventName.radarCanError)
     if log.HealthData.FaultType.relayMalfunction in self.sm['health'].faults:
       self.events.add(EventName.relayMalfunction)
