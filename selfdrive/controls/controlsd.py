@@ -181,7 +181,7 @@ class Controls:
     if self.startup_event is not None:
       self.events.add(self.startup_event)
       self.startup_event = None
-      self.timer_start = 500
+      self.timer_start = 800
 
     if self.timer_start:
       self.timer_start -= 1
