@@ -105,16 +105,16 @@ class CarInterfaceBase():
       events.add(EventName.espDisabled)
     elif cs_out.gasPressed and self.CP.openpilotLongitudinalControl:
       events.add(EventName.gasPressed)
-    if cs_out.stockFcw:
+    elif cs_out.stockFcw:
       events.add(EventName.stockFcw)
-    if cs_out.stockAeb:
+    elif cs_out.stockAeb:
       events.add(EventName.stockAeb)
-    if cs_out.vEgo > MAX_CTRL_SPEED:
+    elif cs_out.vEgo > MAX_CTRL_SPEED:
       events.add(EventName.speedTooHigh)
-    if cs_out.cruiseState.nonAdaptive:
+    elif cs_out.cruiseState.nonAdaptive:
       events.add(EventName.wrongCruiseMode)
 
-    if cs_out.steerError:
+    elif cs_out.steerError:
       events.add(EventName.steerUnavailable)
     elif cs_out.steerWarning:
       events.add(EventName.steerTempUnavailable)
