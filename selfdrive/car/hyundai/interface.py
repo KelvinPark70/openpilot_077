@@ -38,7 +38,7 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 1675. + STD_CARGO_KG
       ret.wheelbase = 2.845
       ret.steerRatio = 14.5  #12.5
-      ret.steerMaxBP = [40*CV.KPH_TO_MS, 80*CV.KPH_TO_MS, 100*CV.KPH_TO_MS]
+      ret.steerMaxBP = [40*CV.KPH_TO_MS, 70*CV.KPH_TO_MS, 100*CV.KPH_TO_MS]
       ret.steerMaxV = [0.8, 0.95, 1.0]
       ret.lateralTuning.pid.kf = 0.000005
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
