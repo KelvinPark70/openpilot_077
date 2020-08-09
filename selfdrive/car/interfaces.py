@@ -24,6 +24,7 @@ class CarInterfaceBase():
     self.low_speed_alert = False
     self.cruise_enabled_prev = False
     self.timer_init = 100
+    self.timer_pcm = 500
 
     if CarState is not None:
       self.CS = CarState(CP)
@@ -134,7 +135,10 @@ class CarInterfaceBase():
     #  elif not cs_out.cruiseState.enabled:
     #    events.add(EventName.pcmDisable)
 
-    if not pcm_enable or self.timer_init:
+    if self.timer_pcm:
+      self.timer_pcm -= 1
+
+    if not pcm_enable or self.timer_pcm:
       pass
     elif cs_out.cruiseState.enabled != self.cruise_enabled_prev:
       if cs_out.cruiseState.enabled:
