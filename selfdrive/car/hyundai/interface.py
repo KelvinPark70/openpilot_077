@@ -37,7 +37,7 @@ class CarInterface(CarInterfaceBase):
     if candidate == CAR.GRANDEUR_HEV_19:
       ret.mass = 1675. + STD_CARGO_KG
       ret.wheelbase = 2.845
-      ret.steerRatio = 14.5  #12.5
+      ret.steerRatio = 14.1  #12.5
       ret.steerMaxBP = [40*CV.KPH_TO_MS, 50*CV.KPH_TO_MS, 70*CV.KPH_TO_MS]
       ret.steerMaxV = [0.8, 0.95, 1.0]
       ret.lateralTuning.pid.kf = 0.000005
@@ -46,7 +46,7 @@ class CarInterface(CarInterfaceBase):
 
 
       ret.lateralTuning.init('lqr')
-      ret.lateralTuning.lqr.scale = 1950.0
+      ret.lateralTuning.lqr.scale = 1900.0
       ret.lateralTuning.lqr.ki = 0.015
       ret.lateralTuning.lqr.a = [0., 1., -0.22619643, 1.21822268]
       ret.lateralTuning.lqr.b = [-1.92006585e-04, 3.95603032e-05]
