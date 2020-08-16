@@ -186,7 +186,7 @@ static void update_track_data(UIState *s, bool is_mpc, track_vertices_data *pvd)
   // left side up
   for (int i=0; i<=path_height; i++) {
     float px, py, mpx;
-    if (is_mpc) {
+    if (0 && is_mpc) {
       mpx = i==0?0.0:mpc_x_coords[i];
       px = lerp(mpx+1.0, mpx, i/100.0);
       py = mpc_y_coords[i] - off;
@@ -208,7 +208,7 @@ static void update_track_data(UIState *s, bool is_mpc, track_vertices_data *pvd)
   // right side down
   for (int i=path_height; i>=0; i--) {
     float px, py, mpx;
-    if (is_mpc) {
+    if (0 && is_mpc) {
       mpx = i==0?0.0:mpc_x_coords[i];
       px = lerp(mpx+1.0, mpx, i/100.0);
       py = mpc_y_coords[i] + off;
