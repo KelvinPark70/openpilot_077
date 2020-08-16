@@ -241,6 +241,8 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
 {
   int x_pos = s->scene.ui_viz_rx + 300 * is_mpc;
 
+  LOGW("ui_draw_track mps=%d  cnt=%d", is_mpc, pvd->cnt);
+
   nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
   nvgFontSize(s->vg, 36*1.5*fFontSize);
   ui_print( s, x_pos, 0, "mpc:%d / %d", is_mpc, pvd->cnt );
