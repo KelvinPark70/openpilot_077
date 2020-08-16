@@ -460,20 +460,16 @@ static void ui_draw_vision_lanes(UIState *s) {
     update_all_track_data(s);
   }
   // Draw vision path
- // ui_draw_track(s, false, &s->track_vertices[0]);
+  ui_draw_track(s, false, &s->track_vertices[0]);
   if (scene->controls_state.getEnabled()) {
     // Draw MPC path when engaged
     if (scene->rightblindspot){
-      ui_draw_track_right(s, true, &s->track_vertices[0]);
+      ui_draw_track_right(s, true, &s->track_vertices[1]);
     }
     if (scene->leftblindspot){
-      ui_draw_track_left(s, true, &s->track_vertices[0]);
+      ui_draw_track_left(s, true, &s->track_vertices[1]);
     }     
-    ui_draw_track(s, true, &s->track_vertices[0]);
-  }
-  else
-  {
-     ui_draw_track(s, false, &s->track_vertices[0]);
+    ui_draw_track(s, true, &s->track_vertices[1]);
   }
   
 }
