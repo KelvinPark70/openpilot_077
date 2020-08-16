@@ -178,7 +178,7 @@ static void ui_init(UIState *s) {
 
   pthread_mutex_init(&s->lock, NULL);
   s->sm = new SubMaster({"model", "controlsState", "carState", "uiLayoutState", "liveCalibration", "radarState", "thermal",
-                         "health", "ubloxGnss", "driverState", "dMonitoringState", "liveParameters", "frame"
+                         "health", "ubloxGnss", "driverState", "dMonitoringState", "liveParameters", "frame", "liveMpc"
 #ifdef SHOW_SPEEDLIMIT
                           , "liveMapData"
 #endif
@@ -387,7 +387,7 @@ void handle_message(UIState *s, SubMaster &sm) {
      auto data = sm["liveMpc"].getLiveMpc();
      auto x_list = data.getX();
      auto y_list = data.getY();
-    for (int i = 0; i < 0; i++){
+    for (int i = 0; i < 50; i++){
        scene.mpc_x[i] = x_list[i];
        scene.mpc_y[i] = y_list[i];
      }
