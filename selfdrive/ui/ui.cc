@@ -189,6 +189,7 @@ static void ui_init(UIState *s) {
   s->scene.satelliteCount = -1;
   s->started = false;
   s->vision_seen = false;
+  s->livempc_or_radarstate_changed = false;
 
   // init display
   s->fb = framebuffer_init("ui", 0, true, &s->fb_w, &s->fb_h);
@@ -392,7 +393,7 @@ void handle_message(UIState *s, SubMaster &sm) {
        scene.mpc_y[i] = y_list[i];
        LOGW("[%d,%.3f, %.3f] ", i, scene.mpc_x[i], scene.mpc_y[i]);
      }
-     //s->livempc_or_radarstate_changed = true;
+     s->livempc_or_radarstate_changed = true;
   }
   if (sm.updated("uiLayoutState")) {
     auto data = sm["uiLayoutState"].getUiLayoutState();
