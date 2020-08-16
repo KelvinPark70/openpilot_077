@@ -190,7 +190,6 @@ static void update_track_data(UIState *s, bool is_mpc, track_vertices_data *pvd)
       mpx = i==0?0.0:mpc_x_coords[i];
       px = lerp(mpx+1.0, mpx, i/100.0);
       py = mpc_y_coords[i] - off;
-      //py = path.points[i] - off;
     } else {
       px = lerp(i+1.0, i, i/100.0);
       py = path.points[i] - off;
