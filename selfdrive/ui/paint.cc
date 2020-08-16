@@ -645,7 +645,7 @@ static void ui_draw_debug(UIState *s)
 
   ui_print( s, x_pos, y_pos+50*nPos++, "sR:%.2f", scene.live.steerRatio );
   ui_print( s, x_pos, y_pos+50*nPos++, "%d,%d,%d", scene.frontview , scene.fullview, scene.world_objects_visible );
-  ui_print( s, x_pos, y_pos+50*nPos++, "%d,%d,%d", s->started , (int)s->active_app, s->vision_seen );
+  ui_print( s, x_pos, y_pos+50*nPos++, "%d,%d,%d,%d", s->started , (int)s->active_app, s->vision_seen, s->status );
 
 /*
   ui_print( s, x_pos, y_pos+50*nPos++, "aO:%.2f", scene.live.angleOffset );
