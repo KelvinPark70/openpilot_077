@@ -279,11 +279,8 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
   } else {
     // Draw white vision track
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-       COLOR_YELLOW, COLOR_WHITE_ALPHA(0));
-/*
-    track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
        COLOR_WHITE, COLOR_WHITE_ALPHA(0));
-  */
+
   }
 
 
@@ -467,7 +464,7 @@ static void ui_draw_vision_lanes(UIState *s) {
     update_all_track_data(s);
   }
   // Draw vision path
-  ui_draw_track(s, false, &s->track_vertices[0]);
+ // ui_draw_track(s, false, &s->track_vertices[0]);
   if (scene->controls_state.getEnabled()) {
     // Draw MPC path when engaged
     if (scene->rightblindspot){
