@@ -436,6 +436,9 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.leftBlinker = data.getLeftBlinker();
     scene.rightBlinker = data.getRightBlinker();
     scene.getGearShifter = data.getGearShifter();
+
+    scene.leftblindspot = data.getLeftBlindspot();
+    scene.rightblindspot = data.getRightBlindspot();    
   }
   if ( sm.updated("liveParameters") )
   {

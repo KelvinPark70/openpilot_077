@@ -152,7 +152,8 @@ typedef struct UIScene {
   bool  leftBlinker;
   bool  rightBlinker;
 
-
+  bool  rightblindspot;
+  bool  leftblindspot;
 
   cereal::CarState::GearShifter  getGearShifter;  
 
