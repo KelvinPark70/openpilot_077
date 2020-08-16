@@ -390,6 +390,7 @@ void handle_message(UIState *s, SubMaster &sm) {
     for (int i = 0; i < 50; i++){
        scene.mpc_x[i] = x_list[i];
        scene.mpc_y[i] = y_list[i];
+       LOGW("[%d,%.3f, %.3f] ", i, scene.mpc_x[i], scene.mpc_y[i])
      }
      //s->livempc_or_radarstate_changed = true;
   }
