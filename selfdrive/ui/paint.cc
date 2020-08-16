@@ -266,6 +266,7 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
         nvgRGBA(          red_lvl,            green_lvl,  0, 255),
         nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50));
     }
+    LOGW("ui_draw_track mps=%d  cnt=%d  ov=%d  %d,%d", is_mpc, pvd->cnt, s->scene.kegman.steerOverride, red_lvl, green_lvl);
   } else {
     // Draw white vision track
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
@@ -275,7 +276,7 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
 
 
 
-  LOGW("ui_draw_track mps=%d  cnt=%d  ov=%d  %d,%d", is_mpc, pvd->cnt, s->scene.kegman.steerOverride, red_lvl, green_lvl);
+  
   /* THIS IS THE STANDARD MPC -wirelessnet2
   if (is_mpc) {
     // Draw colored MPC track
