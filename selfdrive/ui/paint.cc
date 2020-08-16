@@ -265,17 +265,13 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
       //track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
       //  nvgRGBA(          red_lvl,            green_lvl,  0, 255),
       //  nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50));
-
       NVGcolor color1 = nvgRGBA(          red_lvl,            green_lvl,  0, 255); 
       NVGcolor color2 = nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50);
-
-      color1 = COLOR_RED;
-      color2 = COLOR_RED;
 
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
         color1, color2 );        
     }
-    LOGW("ui_draw_track mps=%d  cnt=%d  ov=%d  %d,%d", is_mpc, pvd->cnt, s->scene.kegman.steerOverride, red_lvl, green_lvl);
+   // LOGW("ui_draw_track mps=%d  cnt=%d  ov=%d  %d,%d", is_mpc, pvd->cnt, s->scene.kegman.steerOverride, red_lvl, green_lvl);
   } else {
     // Draw white vision track
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
@@ -468,13 +464,18 @@ static void ui_draw_vision_lanes(UIState *s) {
   if (scene->controls_state.getEnabled()) {
     // Draw MPC path when engaged
     if (scene->rightblindspot){
-      ui_draw_track_right(s, true, &s->track_vertices[1]);
+      ui_draw_track_right(s, true, &s->track_vertices[0]);
     }
     if (scene->leftblindspot){
-      ui_draw_track_left(s, true, &s->track_vertices[1]);
+      ui_draw_track_left(s, true, &s->track_vertices[0]);
     }     
-    ui_draw_track(s, true, &s->track_vertices[1]);
+    ui_draw_track(s, true, &s->track_vertices[0]);
   }
+  else
+  {
+     ui_draw_track(s, false, &s->track_vertices[0]);
+  }
+  
 }
 
 // Draw all world space objects.
@@ -572,7 +573,7 @@ static void ui_draw_vision_maxspeed(UIState *s) {
     snprintf(maxspeed_str, sizeof(maxspeed_str), "%d", maxspeed_calc);
     ui_draw_text(s->vg, text_x, 242, maxspeed_str, 42 * 2.3, COLOR_WHITE, s->font_sans_bold);
   } else {
-    ui_draw_text(s->vg, text_x, 242, "N/A", 42 * 2.3, COLOR_WHITE_ALPHA(100), s->font_sans_semibold);
+    ui_draw_text(s->vg, text_x, 242, "---", 42 * 2.3, COLOR_WHITE_ALPHA(100), s->font_sans_semibold);
   }
 
 
