@@ -239,13 +239,7 @@ static void update_all_track_data(UIState *s) {
 
 static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd) 
 {
-  int x_pos = s->scene.ui_viz_rx + 300 * is_mpc;
 
-  LOGW("ui_draw_track mps=%d  cnt=%d", is_mpc, pvd->cnt);
-
-  nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
-  nvgFontSize(s->vg, 36*1.5*fFontSize);
-  ui_print( s, x_pos, 0, "mpc:%d / %d", is_mpc, pvd->cnt );
 
  if (pvd->cnt == 0) return;
 
@@ -279,9 +273,9 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
   }
 
 
-  
-  ui_print( s, x_pos, 50, "Override:%d", s->scene.kegman.steerOverride );
-  ui_print( s, x_pos, 100, "red:%d/%d", red_lvl, green_lvl );
+
+
+  LOGW("ui_draw_track mps=%d  cnt=%d  ov=%d  %d,%d", is_mpc, pvd->cnt, s->scene.kegman.steerOverride, red_lvl, green_lvl);
   /* THIS IS THE STANDARD MPC -wirelessnet2
   if (is_mpc) {
     // Draw colored MPC track
