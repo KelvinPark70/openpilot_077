@@ -383,16 +383,16 @@ void handle_message(UIState *s, SubMaster &sm) {
   if (sm.updated("model")) {
     read_model(scene.model, sm["model"].getModel());
   }
-  // else if (which == cereal::Event::LIVE_MPC) {
-  //   auto data = event.getLiveMpc();
-  //   auto x_list = data.getX();
-  //   auto y_list = data.getY();
-  //   for (int i = 0; i < 50; i++){
-  //     scene.mpc_x[i] = x_list[i];
-  //     scene.mpc_y[i] = y_list[i];
-  //   }
-  //   s->livempc_or_radarstate_changed = true;
-  // }
+  if (sm.updated("liveMpc")) {
+     auto data = sm["liveMpc"].getLiveMpc();
+     auto x_list = data.getX();
+     auto y_list = data.getY();
+     for (int i = 0; i < 50; i++){
+       scene.mpc_x[i] = x_list[i];
+       scene.mpc_y[i] = y_list[i];
+     }
+     s->livempc_or_radarstate_changed = true;
+  }
   if (sm.updated("uiLayoutState")) {
     auto data = sm["uiLayoutState"].getUiLayoutState();
     s->active_app = data.getActiveApp();
