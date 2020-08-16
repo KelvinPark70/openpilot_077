@@ -652,7 +652,7 @@ static void ui_draw_debug(UIState *s)
   int y_pos = 200; 
   int x_pos = ui_viz_rx + 300;
 
-  ui_print( s, x_pos, y_pos+50*nPos++, "sR:%.2f", scene.live.steerRatio );
+  ui_print( s, x_pos, y_pos+50*nPos++, "sR:%.2f,%.5f", scene.live.steerRatio, scene.kegman.output_scale );
   ui_print( s, x_pos, y_pos+50*nPos++, "%d,%d,%d", scene.frontview , scene.fullview, scene.world_objects_visible );
   ui_print( s, x_pos, y_pos+50*nPos++, "%d,%d,%d,%d", s->started , (int)s->active_app, s->vision_seen, s->status );
 
