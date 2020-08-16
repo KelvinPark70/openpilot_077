@@ -239,7 +239,7 @@ static void update_all_track_data(UIState *s) {
 
 static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd) 
 {
-  int x_pos = s->scene.ui_viz_rx + 300;
+  int x_pos = s->scene.ui_viz_rx + 300 * is_mpc;
 
 
 ui_print( s, x_pos, 0, "mpc:%d / %d", is_mpc, pvd->cnt );
@@ -645,6 +645,8 @@ static void ui_draw_debug(UIState *s)
 
   ui_print( s, x_pos, y_pos+50*nPos++, "sR:%.2f", scene.live.steerRatio );
   ui_print( s, x_pos, y_pos+50*nPos++, "%d,%d,%d", scene.frontview , scene.fullview, scene.world_objects_visible );
+  ui_print( s, x_pos, y_pos+50*nPos++, "%d,%d,%d", s->started , (int)s->active_app, s->vision_seen );
+
 /*
   ui_print( s, x_pos, y_pos+50*nPos++, "aO:%.2f", scene.live.angleOffset );
   ui_print( s, x_pos, y_pos+50*nPos++, "aA:%.2f", scene.live.angleOffsetAverage );
