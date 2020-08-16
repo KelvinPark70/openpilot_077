@@ -248,6 +248,8 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd) {
   nvgClosePath(s->vg);
 
   NVGpaint track_bg;
+  int red_lvl = 0;
+  int green_lvl = 0;  
   if (is_mpc) {
     // Draw colored MPC track Kegman's
     if (s->scene.kegman.steerOverride) {
@@ -255,8 +257,8 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd) {
         nvgRGBA(0, 191, 255, 255), nvgRGBA(0, 95, 128, 50));
     } else {
       int torque_scale = (int)fabs(510*(float)s->scene.kegman.output_scale);
-      int red_lvl = fmin(255, torque_scale);
-      int green_lvl = fmin(255, 510-torque_scale);
+      red_lvl = fmin(255, torque_scale);
+      green_lvl = fmin(255, 510-torque_scale);
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
         nvgRGBA(          red_lvl,            green_lvl,  0, 255),
         nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50));
@@ -267,6 +269,10 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd) {
        COLOR_WHITE, COLOR_WHITE_ALPHA(0));
   }
 
+
+  ui_print( s, 300, 0, "mpc:%d", is_mpc );
+  ui_print( s, 300, 50, "mpc:%d", s->scene.kegman.steerOverride );
+  ui_print( s, 300, 100, "red:%d/%d", red_lvl, green_lvl );
   /* THIS IS THE STANDARD MPC -wirelessnet2
   if (is_mpc) {
     // Draw colored MPC track
@@ -644,12 +650,12 @@ static void ui_draw_debug(UIState *s)
  // ui_print( s, x_pos, y_pos+50*nPos++, "ID:%d", scene.fame.frame_id );
  // ui_print( s, x_pos, y_pos+50*nPos++, "tS:%d", scene.fame.timestamp_eof );
  // ui_print( s, x_pos, y_pos+50*nPos++, "fL:%d", scene.fame.frame_length );
-  ui_print( s, x_pos, y_pos+50*nPos++, "iL:%d", scene.fame.integ_lines );
-  ui_print( s, x_pos, y_pos+50*nPos++, "gG:%d", scene.fame.global_gain );
-  ui_print( s, x_pos, y_pos+50*nPos++, "lP:%d", scene.fame.lensPos );
-  ui_print( s, x_pos, y_pos+50*nPos++, "lS:%.2f", scene.fame.dlensSag );
-  ui_print( s, x_pos, y_pos+50*nPos++, "lE:%.2f", scene.fame.dlensErr );
-  ui_print( s, x_pos, y_pos+50*nPos++, "lT:%.2f", scene.fame.dlensTruePos );
+ // ui_print( s, x_pos, y_pos+50*nPos++, "iL:%d", scene.fame.integ_lines );
+ // ui_print( s, x_pos, y_pos+50*nPos++, "gG:%d", scene.fame.global_gain );
+ // ui_print( s, x_pos, y_pos+50*nPos++, "lP:%d", scene.fame.lensPos );
+ // ui_print( s, x_pos, y_pos+50*nPos++, "lS:%.2f", scene.fame.dlensSag );
+ // ui_print( s, x_pos, y_pos+50*nPos++, "lE:%.2f", scene.fame.dlensErr );
+ // ui_print( s, x_pos, y_pos+50*nPos++, "lT:%.2f", scene.fame.dlensTruePos );
     
   
 
