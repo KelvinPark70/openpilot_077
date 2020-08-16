@@ -387,7 +387,7 @@ void handle_message(UIState *s, SubMaster &sm) {
      auto data = sm["liveMpc"].getLiveMpc();
      auto x_list = data.getX();
      auto y_list = data.getY();
-     for (int i = 0; i < 50; i++){
+     for (int i = 0; i < 10; i++){
        scene.mpc_x[i] = x_list[i];
        scene.mpc_y[i] = y_list[i];
      }
