@@ -851,25 +851,6 @@ static void ui_draw_driver_view(UIState *s) {
   ui_draw_circle_image(s->vg, x, y, face_size, s->img_face, scene->driver_state.getFaceProb() > 0.4);
 }
 
-static void ui_draw_vision_header(UIState *s) {
-  const UIScene *scene = &s->scene;
-  int ui_viz_rx = scene->ui_viz_rx;
-  int ui_viz_rw = scene->ui_viz_rw;
-
-  NVGpaint gradient = nvgLinearGradient(s->vg, ui_viz_rx,
-                        (box_y+(header_h-(header_h/2.5))),
-                        ui_viz_rx, box_y+header_h,
-                        nvgRGBAf(0,0,0,0.45), nvgRGBAf(0,0,0,0));
-  ui_draw_rect(s->vg, ui_viz_rx, box_y, ui_viz_rw, header_h, gradient);
-
-  ui_draw_vision_maxspeed(s);
-
-#ifdef SHOW_SPEEDLIMIT
-  ui_draw_vision_speedlimit(s);
-#endif
-  ui_draw_vision_speed(s);
-  ui_draw_vision_event(s);
-}
 
 
 //BB START: functions added for the display of various items
@@ -1126,6 +1107,30 @@ static void bb_ui_draw_UI(UIState *s)
 //BB END: functions added for the display of various items
 
 
+static void ui_draw_vision_header(UIState *s) {
+  const UIScene *scene = &s->scene;
+  int ui_viz_rx = scene->ui_viz_rx;
+  int ui_viz_rw = scene->ui_viz_rw;
+
+  NVGpaint gradient = nvgLinearGradient(s->vg, ui_viz_rx,
+                        (box_y+(header_h-(header_h/2.5))),
+                        ui_viz_rx, box_y+header_h,
+                        nvgRGBAf(0,0,0,0.45), nvgRGBAf(0,0,0,0));
+  ui_draw_rect(s->vg, ui_viz_rx, box_y, ui_viz_rw, header_h, gradient);
+
+  ui_draw_vision_maxspeed(s);
+
+#ifdef SHOW_SPEEDLIMIT
+  ui_draw_vision_speedlimit(s);
+#endif
+  ui_draw_vision_speed(s);
+  ui_draw_vision_event(s);
+
+  //BB START: add new measures panel  const int bb_dml_w = 180;
+  bb_ui_draw_UI(s);
+  //BB END: add new measures panel     
+}
+
 static void ui_draw_vision_footer(UIState *s) {
   nvgBeginPath(s->vg);
   nvgRect(s->vg, s->scene.ui_viz_rx, footer_y, s->scene.ui_viz_rw, footer_h);
@@ -1135,11 +1140,6 @@ static void ui_draw_vision_footer(UIState *s) {
 #ifdef SHOW_SPEEDLIMIT
    ui_draw_vision_map(s);
 #endif
-
-  //BB START: add new measures panel  const int bb_dml_w = 180;
-  bb_ui_draw_UI(s);
-  //BB END: add new measures panel   
-
 }
 
 void ui_draw_vision_alert(UIState *s, cereal::ControlsState::AlertSize va_size, int va_color,
